@@ -11,20 +11,20 @@ import CryptoSection from '../components/market/CryptoSection';
 import { marketSizeKpis, capitalKpis } from '../data/kpis';
 
 const revenueTrajectoryBars = [
-  { label: '2024', width: 11, value: '$480M', color: 'var(--color-ink-faint)' },
-  { label: '2025', width: 15, value: '$670M', color: 'var(--color-wrapper)' },
-  { label: '2026', width: 19, value: '$850M', color: 'var(--color-acid)' },
-  { label: '2030', width: 46, value: '$3.4B', color: 'var(--color-frontier)' },
-  { label: '2034 (low)', width: 74, value: '$11.2B', color: 'var(--color-frontier)' },
+  { label: '2024', width: 11, value: '~$0.55B', color: 'var(--color-ink-faint)' },
+  { label: '2025', width: 15, value: '$0.72B', color: 'var(--color-wrapper)' },
+  { label: '2026', width: 19, value: '$0.85B', color: 'var(--color-acid)' },
+  { label: '2030', width: 46, value: '~$2.1B', color: 'var(--color-frontier)' },
+  { label: '2034 (low)', width: 74, value: '$3.4B', color: 'var(--color-frontier)' },
   { label: '2034 (high)', width: 100, value: '$21.6B', color: 'linear-gradient(90deg, #ff5e3a, #d6ff3f)' },
 ];
 
 const arrLeaderBars = [
-  { label: 'Higgsfield', width: 100, value: '$100M+', color: 'var(--color-acid)' },
-  { label: 'Kling', width: 80, value: '$80M+', color: 'var(--color-frontier)' },
-  { label: 'Synthesia', width: 50, value: '$50M+', color: 'var(--color-wrapper)' },
-  { label: 'Pika', width: 43, value: '$43M+', color: 'var(--color-wrapper)' },
-  { label: 'HeyGen', width: 33, value: '$33M+', color: 'var(--color-wrapper)' },
+  { label: 'Higgsfield', width: 100, value: '~$300M*', color: 'linear-gradient(90deg, var(--color-wrapper), var(--color-acid))' },
+  { label: 'Kling (run-rate)', width: 80, value: '~$240M', color: 'var(--color-frontier)' },
+  { label: 'Synthesia', width: 50, value: '$150M+', color: 'var(--color-wrapper)' },
+  { label: 'Pika (est.)', width: 43, value: '~$130M', color: 'var(--color-frontier)' },
+  { label: 'HeyGen', width: 33, value: '$100M+', color: 'var(--color-wrapper)' },
 ];
 
 const valueCaptureSegments = [
