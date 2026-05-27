@@ -4,6 +4,7 @@ import EquityBreakdown from '../components/costs/EquityBreakdown';
 import MilestoneTrack from '../components/costs/MilestoneTrack';
 import TeamDiagram from '../components/costs/TeamDiagram';
 import UnitEconomics from '../components/costs/UnitEconomics';
+import CommentThread from '../components/costs/CommentThread';
 import { scenarios } from '../data/costs';
 import { formatCurrency, formatPercent } from '../lib/format';
 
@@ -60,6 +61,7 @@ export default function CostAnalysis() {
           subtitle="at scale target"
         />
         <TeamDiagram />
+        <CommentThread sectionId="team-distribution" />
       </section>
 
       {/* 05: Unit Economics */}
@@ -70,6 +72,7 @@ export default function CostAnalysis() {
           subtitle="per-video · per-customer"
         />
         <UnitEconomics />
+        <CommentThread sectionId="unit-economics" />
       </section>
 
       {/* 06: Scaling Scenarios */}
