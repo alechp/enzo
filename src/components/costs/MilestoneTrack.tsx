@@ -25,10 +25,9 @@ export default function MilestoneTrack() {
                   <div class="font-mono text-[9px] uppercase text-ink-faint tracking-wide">
                     {tier.label}
                   </div>
-                  <div class="font-mono text-[11px] text-ink-dim mt-1">
-                    {formatCurrency(tier.base, true)}
+                  <div class="font-mono text-[11px] text-acid mt-1">
+                    +{formatCurrency(tier.bump, true)}
                   </div>
-                  <div class="font-mono text-[11px] text-wrapper">{tier.equity}%</div>
                 </div>
               )}
             </For>
@@ -57,11 +56,10 @@ export default function MilestoneTrack() {
                     <div class="font-mono text-[9px] uppercase text-ink-faint tracking-wide">
                       {tier.label}
                     </div>
-                    <div class="flex gap-3 mt-1">
-                      <span class="font-mono text-[11px] text-ink-dim">
-                        {formatCurrency(tier.base, true)}
+                    <div class="mt-1">
+                      <span class="font-mono text-[11px] text-acid">
+                        +{formatCurrency(tier.bump, true)}
                       </span>
-                      <span class="font-mono text-[11px] text-wrapper">{tier.equity}%</span>
                     </div>
                   </div>
                 </div>

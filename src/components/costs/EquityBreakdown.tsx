@@ -1,8 +1,7 @@
 export default function EquityBreakdown() {
   const terms = [
     { label: 'Vesting Schedule', value: '4-year standard, 1-year cliff' },
-    { label: 'Starting Grant', value: '4.0% equity' },
-    { label: 'Cap Grant', value: '10.0% (at 10,000 customers)' },
+    { label: 'Starting Grant', value: '2.0%–4.0% equity (depends on initial package)' },
     { label: 'Exercise Window', value: '10 years post-departure' },
   ];
 

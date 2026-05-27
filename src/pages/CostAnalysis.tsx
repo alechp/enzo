@@ -5,7 +5,7 @@ import MilestoneTrack from '../components/costs/MilestoneTrack';
 import TeamDiagram from '../components/costs/TeamDiagram';
 import UnitEconomics from '../components/costs/UnitEconomics';
 import { scenarios } from '../data/costs';
-import { formatCurrency, formatPercent } from '../lib/format';
+import { formatCurrency } from '../lib/format';
 
 export default function CostAnalysis() {
   return (
@@ -103,9 +103,9 @@ export default function CostAnalysis() {
                   <span class="font-mono text-ink">{formatCurrency(s.grossProfit, true)}</span>
                 </div>
                 <div class="flex justify-between border-t border-line pt-2 mt-2">
-                  <span class="text-ink-faint">Comp tier</span>
+                  <span class="text-ink-faint">Salary bump</span>
                   <span class="font-mono text-acid">
-                    {formatCurrency(s.compBase, true)} + {s.compEquity}%
+                    +{formatCurrency(s.salaryBump, true)}
                   </span>
                 </div>
               </div>
@@ -116,7 +116,7 @@ export default function CostAnalysis() {
           class="font-mono text-[10.5px] text-ink-faint mt-3.5"
           style="letter-spacing:.06em"
         >
-          Scenarios assume $99/mo mid-tier pricing, ~82% gross margin, $445k/mo fixed costs. Net =
+          Scenarios assume $99/mo mid-tier pricing, ~82% gross margin, $177k/mo fixed costs. Net =
           gross profit &minus; fixed costs.
         </div>
       </section>
