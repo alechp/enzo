@@ -143,13 +143,13 @@ export default function UnitEconomics() {
         {/* Breakeven KPI */}
         <div class="bg-panel border border-line p-8 text-center">
           <div class="font-display font-black text-[2.7rem] text-acid leading-none mb-2">
-            ~5,500
+            ~2,180
           </div>
           <div class="text-ink-dim text-[.95rem] mb-3">
             customers to cover fixed burn at $99/mo mid-tier
           </div>
           <div class="font-mono text-[10px] text-ink-faint tracking-wide">
-            $445k / ($99 &times; 0.82) &asymp; 5,482
+            $177k / ($99 &times; 0.82) &asymp; 2,180
           </div>
         </div>
       </div>

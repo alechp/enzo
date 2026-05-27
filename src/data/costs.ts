@@ -1,27 +1,35 @@
 export interface CompTier {
   customers: number;
-  base: number;
-  equity: number;
+  bump: number;
   expectedMrr: number;
   teamSize: [number, number];
   label: string;
 }
 
 export const compTiers: CompTier[] = [
-  { customers: 0, base: 240000, equity: 4.0, expectedMrr: 0, teamSize: [2, 3], label: 'Launch' },
-  { customers: 1000, base: 252000, equity: 4.6, expectedMrr: 30000, teamSize: [4, 5], label: 'Seed validation' },
-  { customers: 2500, base: 270000, equity: 5.5, expectedMrr: 75000, teamSize: [6, 8], label: 'Series A ready' },
-  { customers: 5000, base: 300000, equity: 7.0, expectedMrr: 150000, teamSize: [10, 12], label: 'Breakeven' },
-  { customers: 7500, base: 330000, equity: 8.5, expectedMrr: 250000, teamSize: [14, 16], label: 'Growth stage' },
-  { customers: 10000, base: 360000, equity: 10.0, expectedMrr: 350000, teamSize: [18, 20], label: 'Scale target' },
+  { customers: 0, bump: 0, expectedMrr: 0, teamSize: [2, 3], label: 'Launch' },
+  { customers: 1000, bump: 10000, expectedMrr: 30000, teamSize: [3, 4], label: 'Seed validation' },
+  { customers: 2500, bump: 25000, expectedMrr: 75000, teamSize: [4, 5], label: 'Series A ready' },
+  { customers: 5000, bump: 40000, expectedMrr: 150000, teamSize: [5, 7], label: 'Breakeven' },
+  { customers: 7500, bump: 55000, expectedMrr: 250000, teamSize: [6, 7], label: 'Growth stage' },
+  { customers: 10000, bump: 70000, expectedMrr: 350000, teamSize: [7, 7], label: 'Scale target' },
 ];
 
-export function getComp(customers: number): { base: number; equity: number } {
-  const t = Math.min(Math.max(customers, 0) / 10000, 1);
+export function getInitialComp(t: number): { base: number; equity: number } {
+  // t = 0 (floor/max equity) to 1 (ceiling/max cash)
   return {
-    base: 240000 + t * 120000,
-    equity: 4 + t * 6,
+    base: 240000 + t * 120000,      // $240k → $360k
+    equity: 4 - t * 2,              // 4.0% → 2.0% (INVERSE)
   };
+}
+
+export function getMilestoneBump(customers: number): number {
+  const t = Math.min(Math.max(customers, 0) / 10000, 1);
+  return t * 70000; // $0 → $70k linear
+}
+
+export function getTotalBase(initialT: number, customers: number): number {
+  return getInitialComp(initialT).base + getMilestoneBump(customers);
 }
 
 export interface VideoCost {
@@ -47,12 +55,11 @@ export interface TeamRole {
 }
 
 export const teamRoles: TeamRole[] = [
-  { role: 'Engineering', headcount: 7, monthlyCost: 140000, color: 'var(--color-acid)' },
-  { role: 'ML / Video Pipeline', headcount: 4, monthlyCost: 100000, color: 'var(--color-frontier)' },
-  { role: 'Design / Creative', headcount: 2, monthlyCost: 30000, color: 'var(--color-wrapper)' },
-  { role: 'GTM / Sales', headcount: 3, monthlyCost: 45000, color: 'var(--color-ancillary)' },
-  { role: 'Ops / Finance', headcount: 2, monthlyCost: 25000, color: 'var(--color-public)' },
-  { role: 'Leadership', headcount: 2, monthlyCost: 60000, color: 'var(--color-ink)' },
+  { role: 'Engineering', headcount: 3, monthlyCost: 60000, color: 'var(--color-acid)' },
+  { role: 'ML / Video Pipeline', headcount: 1, monthlyCost: 25000, color: 'var(--color-frontier)' },
+  { role: 'Design / Creative', headcount: 1, monthlyCost: 12000, color: 'var(--color-wrapper)' },
+  { role: 'GTM / Sales', headcount: 1, monthlyCost: 15000, color: 'var(--color-ancillary)' },
+  { role: 'Leadership', headcount: 1, monthlyCost: 20000, color: 'var(--color-ink)' },
 ];
 
 export interface FixedCost {
@@ -62,7 +69,7 @@ export interface FixedCost {
 }
 
 export const fixedCosts: FixedCost[] = [
-  { category: 'Team (salaries + benefits)', monthly: 400000, annual: 4800000 },
+  { category: 'Team (salaries + benefits)', monthly: 132000, annual: 1584000 },
   { category: 'Infrastructure (non-COGS)', monthly: 25000, annual: 300000 },
   { category: 'Tools & SaaS', monthly: 8000, annual: 96000 },
   { category: 'Legal / compliance', monthly: 5000, annual: 60000 },
@@ -75,12 +82,11 @@ export interface Scenario {
   mrr: number;
   grossProfit: number;
   net: number;
-  compBase: number;
-  compEquity: number;
+  salaryBump: number;
 }
 
 export const scenarios: Scenario[] = [
-  { name: 'Conservative', customers: 2500, mrr: 248000, grossProfit: 203000, net: -242000, compBase: 270000, compEquity: 5.5 },
-  { name: 'Target', customers: 5000, mrr: 495000, grossProfit: 406000, net: -39000, compBase: 300000, compEquity: 7.0 },
-  { name: 'Stretch', customers: 10000, mrr: 990000, grossProfit: 812000, net: 367000, compBase: 360000, compEquity: 10.0 },
+  { name: 'Conservative', customers: 2500, mrr: 248000, grossProfit: 203000, net: 26000, salaryBump: 25000 },
+  { name: 'Target', customers: 5000, mrr: 495000, grossProfit: 406000, net: 229000, salaryBump: 40000 },
+  { name: 'Stretch', customers: 10000, mrr: 990000, grossProfit: 812000, net: 635000, salaryBump: 70000 },
 ];
