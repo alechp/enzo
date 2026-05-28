@@ -6,7 +6,7 @@ export default function MilestoneTrack() {
   return (
     <div class="mt-6">
       {/* Desktop: horizontal milestone track */}
-      <div class="hidden md:block">
+      <div class="hidden min-[881px]:block">
         <div class="relative">
           {/* Background line */}
           <div class="absolute top-6 left-0 right-0 h-px bg-line-bright" />
@@ -20,7 +20,7 @@ export default function MilestoneTrack() {
                   </div>
                   <div
                     class="w-3 h-3 rounded-full bg-acid my-2 relative z-10"
-                    style="box-shadow: 0 0 8px #d6ff3f"
+                    style={{ 'box-shadow': '0 0 8px var(--color-acid)' }}
                   />
                   <div class="font-mono text-[9px] uppercase text-ink-faint tracking-wide">
                     {tier.label}
@@ -36,7 +36,7 @@ export default function MilestoneTrack() {
       </div>
 
       {/* Mobile: vertical timeline */}
-      <div class="md:hidden">
+      <div class="min-[881px]:hidden">
         <div class="relative pl-6">
           {/* Vertical line */}
           <div class="absolute left-[5px] top-0 bottom-0 w-px bg-line-bright" />
@@ -47,7 +47,7 @@ export default function MilestoneTrack() {
                 <div class="relative flex items-start gap-4">
                   <div
                     class="absolute left-[-21px] top-1 w-3 h-3 rounded-full bg-acid z-10 shrink-0"
-                    style="box-shadow: 0 0 8px #d6ff3f"
+                    style={{ 'box-shadow': '0 0 8px var(--color-acid)' }}
                   />
                   <div>
                     <div class="font-display font-black text-lg text-ink">

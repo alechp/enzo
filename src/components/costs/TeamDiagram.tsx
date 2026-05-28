@@ -66,7 +66,7 @@ export default function TeamDiagram() {
                 'flex-grow': role.monthlyCost / maxCost(),
               }}
             >
-              <div class="flex items-center gap-3 flex-wrap">
+              <div class="flex items-center gap-3 flex-wrap max-[640px]:flex-col max-[640px]:items-start">
                 <span class="font-body font-semibold text-ink">{role.role}</span>
                 <span class="font-mono text-[10px] bg-panel-2 px-2 py-0.5 rounded text-ink-faint">
                   <EditableValue
@@ -78,7 +78,7 @@ export default function TeamDiagram() {
                     format={(v) => `${v} ${v === 1 ? 'person' : 'people'}`}
                   />
                 </span>
-                <span class="font-mono text-[.86rem] text-ink-dim ml-auto">
+                <span class="font-mono text-[.86rem] text-ink-dim ml-auto max-[640px]:ml-0">
                   <EditableValue
                     value={role.monthlyCost}
                     onChange={(v) => updateRole(i(), 'monthlyCost', v)}

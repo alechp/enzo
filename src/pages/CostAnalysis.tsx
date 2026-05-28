@@ -5,10 +5,12 @@ import MilestoneTrack from '../components/costs/MilestoneTrack';
 import TeamDiagram from '../components/costs/TeamDiagram';
 import UnitEconomics from '../components/costs/UnitEconomics';
 import CommentThread from '../components/costs/CommentThread';
-import { scenarios } from '../data/costs';
+import { scenarios, fixedCosts } from '../data/costs';
 import { formatCurrency } from '../lib/format';
 
 export default function CostAnalysis() {
+  const totalFixed = () => fixedCosts.reduce((sum, f) => sum + f.monthly, 0);
+
   return (
     <>
       {/* HEADER */}
@@ -78,7 +80,7 @@ export default function CostAnalysis() {
       {/* 06: Scaling Scenarios */}
       <section class="py-[54px]">
         <SectionHead number="06 /" title="Scaling Scenarios" subtitle="projections" />
-        <div class="grid grid-cols-3 gap-px bg-line border border-line max-md:grid-cols-1">
+        <div class="grid grid-cols-3 gap-px bg-line border border-line max-[880px]:grid-cols-1">
           {scenarios.map((s) => (
             <div class="bg-panel p-6 hover:bg-panel-2 transition-colors">
               <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-3">
@@ -119,8 +121,7 @@ export default function CostAnalysis() {
           class="font-mono text-[10.5px] text-ink-faint mt-3.5"
           style="letter-spacing:.06em"
         >
-          Scenarios assume $99/mo mid-tier pricing, ~82% gross margin, $177k/mo fixed costs. Net =
-          gross profit &minus; fixed costs.
+          Scenarios assume $99/mo mid-tier pricing, ~82% gross margin, {formatCurrency(totalFixed(), true)}/mo fixed costs. Net = gross profit − fixed costs.
         </div>
       </section>
     </>

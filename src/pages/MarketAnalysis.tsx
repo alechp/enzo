@@ -89,7 +89,7 @@ const MarketAnalysis: Component = () => {
               The AI-powered video generation market is growing at a{' '}
               <strong class="text-ink">45–55% CAGR</strong> across all credible forecasts. In 2024
               the sector generated roughly <strong class="text-ink">$480M</strong> in revenue,
-              rising to an estimated <strong class="text-ink">$670M</strong> in 2025 and{' '}
+              rising to an estimated <strong class="text-ink">$720M</strong> in 2025 and{' '}
               <strong class="text-ink">$850M</strong> by 2026. Longer-range projections diverge: a
               consensus midpoint puts the market at <strong class="text-ink">$3.4B by 2030</strong>,
               while more aggressive models reach{' '}

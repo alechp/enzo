@@ -6,7 +6,7 @@ export interface Kpi {
 }
 
 export const marketSizeKpis: Kpi[] = [
-  { label: '2026 Market (rev.)', value: '$0.85B', note: 'Core AI-video-generator software revenue; up from ~$717M in 2025', color: 'acid' },
+  { label: '2026 Market (rev.)', value: '$0.85B', note: 'Core AI-video-generator software revenue; up from ~$720M in 2025', color: 'acid' },
   { label: '2030–34 Projection', value: '$3.4B', note: 'Conservative consensus by 2034 at ~19–20% CAGR' },
   { label: 'High-end Forecast', value: '$21.6B', note: 'Aggressive "software" definition by 2034 at 46% CAGR', color: 'frontier' },
   { label: 'Monthly Active Users', value: '124M+', note: 'Across all AI-video platforms globally', color: 'wrapper' },
