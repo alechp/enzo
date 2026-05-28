@@ -56,7 +56,11 @@ export default function UnitEconomics() {
   const grossMargin = () => 1 - cogsPerCustomer() / state.pricePoint;
   const ltv = () => state.pricePoint * grossMargin() * 24;
   const ltvCacRatio = () => ltv() / state.cac;
-  const breakeven = () => Math.ceil(totalFixedMonthly() / (state.pricePoint * grossMargin()));
+  const breakeven = () => {
+    const gm = grossMargin();
+    if (gm <= 0) return Infinity;
+    return Math.ceil(totalFixedMonthly() / (state.pricePoint * gm));
+  };
 
   const barColors = ['#ff5e3a', '#3aa0ff', '#b18cff', '#ffd166'];
 
@@ -306,14 +310,20 @@ export default function UnitEconomics() {
         {/* Breakeven KPI */}
         <div class="bg-panel border border-line p-8 text-center">
           <div class="font-display font-black text-[2.7rem] text-acid leading-none mb-2">
-            ~{breakeven().toLocaleString()}
+            {breakeven() === Infinity ? 'N/A' : `~${breakeven().toLocaleString()}`}
           </div>
           <div class="text-ink-dim text-[.95rem] mb-3">
             customers to cover fixed burn at ${state.pricePoint}/mo
           </div>
-          <div class="font-mono text-[10px] text-ink-faint tracking-wide">
-            {formatCurrency(totalFixedMonthly(), true)} / (${state.pricePoint} &times; {(grossMargin() * 100).toFixed(0)}%) &asymp; {breakeven().toLocaleString()}
-          </div>
+          {breakeven() === Infinity ? (
+            <div class="font-mono text-[10px] text-down tracking-wide">
+              Negative margin — pricing below COGS
+            </div>
+          ) : (
+            <div class="font-mono text-[10px] text-ink-faint tracking-wide">
+              {formatCurrency(totalFixedMonthly(), true)} / (${state.pricePoint} &times; {(grossMargin() * 100).toFixed(0)}%) &asymp; {breakeven().toLocaleString()}
+            </div>
+          )}
         </div>
 
         {/* Reset button */}

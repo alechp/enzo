@@ -80,13 +80,13 @@ export default function CommentThread(props: CommentThreadProps) {
             {(comment, i) => (
               <div class="group flex items-start gap-2 text-sm">
                 <div class="flex-1 min-w-0">
-                  <span class="text-ink">{comment.text}</span>
+                  <span class="text-ink break-words">{comment.text}</span>
                   <span class="text-ink-faint text-[11px] ml-2">
                     {relativeTime(comment.timestamp)}
                   </span>
                 </div>
                 <button
-                  class="text-ink-faint hover:text-ink opacity-0 group-hover:opacity-100 transition-opacity text-xs px-1 shrink-0"
+                  class="text-ink-faint hover:text-ink opacity-40 hover:opacity-100 transition-opacity text-xs px-1 shrink-0"
                   onClick={() => removeComment(i())}
                   title="Delete comment"
                 >
