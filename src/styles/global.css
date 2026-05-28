@@ -39,3 +39,105 @@ body {
     linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
   background-size: 54px 54px;
 }
+
+/* Range slider styles */
+input[type="range"].comp-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 12px;
+  background: var(--color-panel-2);
+  border: 1px solid var(--color-line);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"].comp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--color-acid);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 12px var(--color-acid);
+}
+input[type="range"].comp-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--color-acid);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 12px var(--color-acid);
+}
+
+input[type="range"].editable-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--color-panel-2);
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"].editable-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--color-acid);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 6px var(--color-acid);
+}
+input[type="range"].editable-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--color-acid);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 6px var(--color-acid);
+}
+
+.editable-value-trigger {
+  border-bottom: 1px dashed var(--color-line-bright);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.editable-value-trigger:hover {
+  border-bottom-color: rgba(214, 255, 63, 0.4);
+}
+
+/* AccessGate animations */
+@keyframes gate-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+@keyframes gate-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.gate-shake { animation: gate-shake 0.5s ease-in-out; }
+.gate-fade-out { animation: gate-fade-out 0.4s ease-out forwards; }
+
+/* Accessibility: reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .gate-shake { animation: none; }
+  .gate-fade-out { animation: none; opacity: 0; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Touch: larger slider thumbs on coarse pointers */
+@media (pointer: coarse) {
+  input[type="range"].editable-slider::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+  }
+  input[type="range"].editable-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+  }
+}

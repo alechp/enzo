@@ -3,7 +3,7 @@ import { getInitialComp, getMilestoneBump, getTotalBase } from '../../data/costs
 import { formatCurrency, formatPercent, formatNumber } from '../../lib/format';
 
 export default function CompSlider() {
-  const [packageT, setPackageT] = createSignal(50);
+  const [packageT, setPackageT] = createSignal(0);
   const [customers, setCustomers] = createSignal(0);
 
   const t = () => packageT() / 100;
@@ -15,37 +15,6 @@ export default function CompSlider() {
 
   return (
     <div class="mt-6">
-      <style>{`
-        input[type="range"].comp-slider {
-          -webkit-appearance: none;
-          width: 100%;
-          height: 12px;
-          background: var(--color-panel-2);
-          border: 1px solid var(--color-line);
-          border-radius: 3px;
-          outline: none;
-          cursor: pointer;
-        }
-        input[type="range"].comp-slider::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          width: 20px;
-          height: 20px;
-          background: var(--color-acid);
-          border-radius: 50%;
-          cursor: pointer;
-          box-shadow: 0 0 12px var(--color-acid);
-        }
-        input[type="range"].comp-slider::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
-          background: var(--color-acid);
-          border-radius: 50%;
-          cursor: pointer;
-          border: none;
-          box-shadow: 0 0 12px var(--color-acid);
-        }
-      `}</style>
-
       {/* Slider A — Initial Package Selection */}
       <div class="mb-10">
         <div class="font-mono uppercase text-ink-faint mb-4" style="font-size:10.5px;letter-spacing:.14em">
@@ -119,30 +88,48 @@ export default function CompSlider() {
         </div>
       </div>
 
-      {/* Summary row: 3 cards */}
-      <div class="grid grid-cols-3 gap-[34px] max-[880px]:grid-cols-1">
-        <div class="bg-panel border border-line p-6">
+      {/* Summary: Base + Bonus = Effective */}
+      <div class="flex items-center gap-3 flex-wrap max-[880px]:flex-col max-[880px]:items-stretch">
+        <div class="bg-panel border border-line p-5 flex-1 min-w-[140px]">
           <div class="font-mono uppercase text-ink-faint mb-2" style="font-size:10.5px">
-            Effective Base
+            Base Salary
           </div>
-          <div class="font-display font-black text-[1.6rem] text-ink leading-none">
-            {formatCurrency(effectiveBase(), true)}
+          <div class="font-display font-black text-[1.5rem] text-ink leading-none">
+            {formatCurrency(initialComp().base, true)}
           </div>
         </div>
-        <div class="bg-panel border border-line p-6">
-          <div class="font-mono uppercase text-ink-faint mb-2" style="font-size:10.5px">
-            Equity Grant
-          </div>
-          <div class="font-display font-black text-[1.6rem] text-wrapper leading-none">
-            {formatPercent(initialComp().equity)}
-          </div>
-        </div>
-        <div class="bg-panel border border-line p-6">
+
+        <span class="font-display font-black text-[1.5rem] text-ink-faint max-[880px]:text-center shrink-0">+</span>
+
+        <div class="bg-panel border border-line p-5 flex-1 min-w-[140px]">
           <div class="font-mono uppercase text-ink-faint mb-2" style="font-size:10.5px">
             Milestone Bonus
           </div>
-          <div class="font-display font-black text-[1.6rem] text-acid leading-none">
+          <div class="font-display font-black text-[1.5rem] text-acid leading-none">
             +{formatCurrency(milestoneBump(), true)}
+          </div>
+        </div>
+
+        <span class="font-display font-black text-[1.5rem] text-ink-faint max-[880px]:text-center shrink-0">=</span>
+
+        <div class="bg-panel border border-acid/40 p-5 flex-1 min-w-[140px]">
+          <div class="font-mono uppercase text-ink-faint mb-2" style="font-size:10.5px">
+            Effective Base
+          </div>
+          <div class="font-display font-black text-[1.5rem] text-acid leading-none">
+            {formatCurrency(effectiveBase(), true)}
+          </div>
+        </div>
+      </div>
+
+      {/* Equity — independent of milestones */}
+      <div class="mt-4">
+        <div class="bg-panel border border-line p-5 max-w-[240px]">
+          <div class="font-mono uppercase text-ink-faint mb-2" style="font-size:10.5px">
+            Equity Grant
+          </div>
+          <div class="font-display font-black text-[1.5rem] text-wrapper leading-none">
+            {formatPercent(initialComp().equity)}
           </div>
         </div>
       </div>

@@ -27,32 +27,8 @@ export default function AccessGate(props: ParentProps) {
   if (granted()) return <>{props.children}</>;
 
   return (
-    <>
-      <style>{`
-        @keyframes gate-shake {
-          0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-          20%, 40%, 60%, 80% { transform: translateX(4px); }
-        }
-        @keyframes gate-fade-out {
-          from { opacity: 1; }
-          to { opacity: 0; }
-        }
-        .gate-shake {
-          animation: gate-shake 0.5s ease-in-out;
-        }
-        .gate-fade-out {
-          animation: gate-fade-out 0.4s ease-out forwards;
-        }
-      `}</style>
-
       <div
         class={`fixed inset-0 z-50 flex items-center justify-center bg-bg ${fading() ? 'gate-fade-out' : ''}`}
-        style={{
-          'background-image':
-            'linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)',
-          'background-size': '54px 54px',
-        }}
       >
         <div
           class={`flex flex-col items-center gap-6 p-10 rounded-sm border border-line bg-panel ${error() ? 'gate-shake' : ''}`}
@@ -103,6 +79,5 @@ export default function AccessGate(props: ParentProps) {
           </button>
         </div>
       </div>
-    </>
   );
 }
