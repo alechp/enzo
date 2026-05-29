@@ -35,7 +35,7 @@ export default function CostAnalysis() {
 
       {/* 01: Comp Slider */}
       <section class="py-[54px] border-b border-line">
-        <SectionHead number="01 /" title="Compensation Structure" subtitle="sliding scale" />
+        <SectionHead number="01 /" title="Compensation Structure" subtitle="CEO · CTO · BD" />
         <CompSlider />
       </section>
 

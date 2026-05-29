@@ -75,7 +75,7 @@ export interface TeamRole {
 export const teamRoles: TeamRole[] = [
   { role: 'CEO', headcount: 1, annualSalary: 0, color: 'var(--color-acid)', status: 'active' },
   { role: 'Business Development', headcount: 1, annualSalary: 100000, color: 'var(--color-wrapper)', status: 'active' },
-  { role: 'CTO', headcount: 1, annualSalary: 190000, color: 'var(--color-frontier)', status: 'future', startMonth: 3 },
+  { role: 'CTO', headcount: 1, annualSalary: 240000, color: 'var(--color-frontier)', status: 'future', startMonth: 3 },
   { role: 'ML / Video Pipeline', headcount: 1, annualSalary: 175000, color: 'var(--color-ancillary)', status: 'future', startMonth: 6 },
   { role: 'Technical PM', headcount: 1, annualSalary: 145000, color: 'var(--color-public)', status: 'future', startMonth: 6 },
   { role: 'Customer Support', headcount: 1, annualSalary: 55000, color: 'var(--color-up)', status: 'future', startMonth: 9 },
