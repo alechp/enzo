@@ -1,6 +1,7 @@
 import { For, Show, onMount } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
 import { videoCosts, fixedCosts, type VideoCost, type FixedCost } from '../../data/costs';
+import { activeMonthlyBurn } from '../../data/teamStore';
 import { formatCurrency } from '../../lib/format';
 import EditableValue from './EditableValue';
 
@@ -42,13 +43,20 @@ export default function UnitEconomics() {
 
   onMount(() => {
     const saved = loadSaved();
-    if (saved) setState(reconcile(saved));
+    if (saved) {
+      // Safety: if saved fixedCosts length doesn't match current defaults
+      // (e.g., old data had a "Team" line that was removed), ignore saved fixedCosts
+      if (saved.fixedCosts && saved.fixedCosts.length !== fixedCosts.length) {
+        saved.fixedCosts = fixedCosts.map((f) => ({ ...f }));
+      }
+      setState(reconcile(saved));
+    }
   });
 
   // Derived values
   const totalVideoMin = () => state.videoCosts.reduce((sum, v) => sum + v.min, 0);
   const totalVideoMax = () => state.videoCosts.reduce((sum, v) => sum + v.max, 0);
-  const totalFixedMonthly = () => state.fixedCosts.reduce((sum, f) => sum + f.monthly, 0);
+  const totalFixedMonthly = () => state.fixedCosts.reduce((sum, f) => sum + f.monthly, 0) + activeMonthlyBurn();
   const totalFixedAnnual = () => totalFixedMonthly() * 12;
 
   const avgCostPerVideo = () => (totalVideoMin() + totalVideoMax()) / 2;
