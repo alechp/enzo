@@ -1,16 +1,12 @@
 import SectionHead from '../components/costs/SectionHead';
 import CompSlider from '../components/costs/CompSlider';
 import EquityBreakdown from '../components/costs/EquityBreakdown';
-import MilestoneTrack from '../components/costs/MilestoneTrack';
 import TeamDiagram from '../components/costs/TeamDiagram';
 import UnitEconomics from '../components/costs/UnitEconomics';
+import FinancialProjections from '../components/costs/FinancialProjections';
 import CommentThread from '../components/costs/CommentThread';
-import { scenarios, fixedCosts } from '../data/costs';
-import { formatCurrency } from '../lib/format';
 
 export default function CostAnalysis() {
-  const totalFixed = () => fixedCosts.reduce((sum, f) => sum + f.monthly, 0);
-
   return (
     <>
       {/* HEADER */}
@@ -49,27 +45,21 @@ export default function CostAnalysis() {
         <EquityBreakdown />
       </section>
 
-      {/* 03: Milestones */}
-      <section class="py-[54px] border-b border-line">
-        <SectionHead number="03 /" title="Customer Milestones" subtitle="gates & unlocks" />
-        <MilestoneTrack />
-      </section>
-
-      {/* 04: Team */}
+      {/* 03: Team */}
       <section class="py-[54px] border-b border-line">
         <SectionHead
-          number="04 /"
+          number="03 /"
           title="Team Distribution & Fixed Costs"
-          subtitle="at scale target"
+          subtitle="tax-adjusted staffing"
         />
         <TeamDiagram />
         <CommentThread sectionId="team-distribution" />
       </section>
 
-      {/* 05: Unit Economics */}
+      {/* 04: Unit Economics */}
       <section class="py-[54px] border-b border-line">
         <SectionHead
-          number="05 /"
+          number="04 /"
           title="Unit Economics"
           subtitle="per-video · per-customer"
         />
@@ -77,52 +67,11 @@ export default function CostAnalysis() {
         <CommentThread sectionId="unit-economics" />
       </section>
 
-      {/* 06: Scaling Scenarios */}
+      {/* 05: Financial Projections */}
       <section class="py-[54px]">
-        <SectionHead number="06 /" title="Scaling Scenarios" subtitle="projections" />
-        <div class="grid grid-cols-3 gap-px bg-line border border-line max-[880px]:grid-cols-1">
-          {scenarios.map((s) => (
-            <div class="bg-panel p-6 hover:bg-panel-2 transition-colors">
-              <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-3">
-                {s.name}
-              </div>
-              <div
-                class="font-display font-black text-[1.8rem] leading-none mb-4"
-                classList={{ 'text-up': s.net > 0, 'text-frontier': s.net < 0 }}
-              >
-                {s.net >= 0 ? '+' : ''}
-                {formatCurrency(s.net, true)}
-                <span class="text-[.6rem] text-ink-faint font-mono font-normal"> /mo net</span>
-              </div>
-              <div class="space-y-2 text-[.84rem]">
-                <div class="flex justify-between">
-                  <span class="text-ink-faint">Customers</span>
-                  <span class="font-mono text-ink">{s.customers.toLocaleString()}</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-ink-faint">MRR</span>
-                  <span class="font-mono text-ink">{formatCurrency(s.mrr, true)}</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-ink-faint">Gross Profit</span>
-                  <span class="font-mono text-ink">{formatCurrency(s.grossProfit, true)}</span>
-                </div>
-                <div class="flex justify-between border-t border-line pt-2 mt-2">
-                  <span class="text-ink-faint">Salary bump</span>
-                  <span class="font-mono text-acid">
-                    +{formatCurrency(s.salaryBump, true)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div
-          class="font-mono text-[10.5px] text-ink-faint mt-3.5"
-          style="letter-spacing:.06em"
-        >
-          Scenarios assume $99/mo mid-tier pricing, ~82% gross margin, {formatCurrency(totalFixed(), true)}/mo fixed costs. Net = gross profit − fixed costs.
-        </div>
+        <SectionHead number="05 /" title="Financial Projections" subtitle="24-month model" />
+        <FinancialProjections />
+        <CommentThread sectionId="financial-projections" />
       </section>
     </>
   );
