@@ -1,35 +1,51 @@
-export interface CompTier {
-  customers: number;
-  bump: number;
-  expectedMrr: number;
-  teamSize: [number, number];
-  label: string;
-}
-
-export const compTiers: CompTier[] = [
-  { customers: 0, bump: 0, expectedMrr: 0, teamSize: [2, 3], label: 'Launch' },
-  { customers: 1000, bump: 10000, expectedMrr: 30000, teamSize: [3, 4], label: 'Seed validation' },
-  { customers: 2500, bump: 25000, expectedMrr: 75000, teamSize: [4, 5], label: 'Series A ready' },
-  { customers: 5000, bump: 40000, expectedMrr: 150000, teamSize: [5, 7], label: 'Breakeven' },
-  { customers: 7500, bump: 55000, expectedMrr: 250000, teamSize: [6, 7], label: 'Growth stage' },
-  { customers: 10000, bump: 70000, expectedMrr: 350000, teamSize: [7, 7], label: 'Scale target' },
-];
-
 export function getInitialComp(t: number): { base: number; equity: number } {
-  // t = 0 (floor/max equity) to 1 (ceiling/max cash)
   return {
-    base: 240000 + t * 120000,      // $240k → $360k
-    equity: 4 - t * 2,              // 4.0% → 2.0% (INVERSE)
+    base: 240000 + t * 120000,
+    equity: 4 - t * 2,
   };
 }
 
-export function getMilestoneBump(customers: number): number {
-  const t = Math.min(Math.max(customers, 0) / 10000, 1);
-  return t * 70000; // $0 → $70k linear
+export interface EmployerTaxBreakdown {
+  socialSecurity: number;
+  medicare: number;
+  futa: number;
+  suta: number;
+  workersComp: number;
+  healthInsurance: number;
+  total: number;
+  fullyLoaded: number;
 }
 
-export function getTotalBase(initialT: number, customers: number): number {
-  return getInitialComp(initialT).base + getMilestoneBump(customers);
+export const TAX_CONSTANTS = {
+  socialSecurityRate: 0.062,
+  socialSecurityCap: 170000,
+  medicareRate: 0.0145,
+  futaRate: 0.006,
+  futaWageCap: 7000,
+  sutaRate: 0.025,
+  sutaWageCap: 12000,
+  workersCompRate: 0.005,
+  healthInsuranceMonthly: 600,
+};
+
+export function computeEmployerTaxes(annualSalary: number): EmployerTaxBreakdown {
+  const ss = Math.min(annualSalary, TAX_CONSTANTS.socialSecurityCap) * TAX_CONSTANTS.socialSecurityRate;
+  const medicare = annualSalary * TAX_CONSTANTS.medicareRate;
+  const futa = Math.min(annualSalary, TAX_CONSTANTS.futaWageCap) * TAX_CONSTANTS.futaRate;
+  const suta = Math.min(annualSalary, TAX_CONSTANTS.sutaWageCap) * TAX_CONSTANTS.sutaRate;
+  const wc = annualSalary * TAX_CONSTANTS.workersCompRate;
+  const health = TAX_CONSTANTS.healthInsuranceMonthly * 12;
+  const total = ss + medicare + futa + suta + wc + health;
+  return {
+    socialSecurity: ss,
+    medicare,
+    futa,
+    suta,
+    workersComp: wc,
+    healthInsurance: health,
+    total,
+    fullyLoaded: annualSalary + total,
+  };
 }
 
 export interface VideoCost {
@@ -50,16 +66,19 @@ export const videoCosts: VideoCost[] = [
 export interface TeamRole {
   role: string;
   headcount: number;
-  monthlyCost: number;
+  annualSalary: number;
   color: string;
+  status: 'active' | 'future';
+  startMonth?: number;
 }
 
 export const teamRoles: TeamRole[] = [
-  { role: 'Engineering', headcount: 3, monthlyCost: 60000, color: 'var(--color-acid)' },
-  { role: 'ML / Video Pipeline', headcount: 1, monthlyCost: 25000, color: 'var(--color-frontier)' },
-  { role: 'Design / Creative', headcount: 1, monthlyCost: 12000, color: 'var(--color-wrapper)' },
-  { role: 'GTM / Sales', headcount: 1, monthlyCost: 15000, color: 'var(--color-ancillary)' },
-  { role: 'Leadership', headcount: 1, monthlyCost: 20000, color: 'var(--color-ink)' },
+  { role: 'CEO', headcount: 1, annualSalary: 0, color: 'var(--color-acid)', status: 'active' },
+  { role: 'Business Development', headcount: 1, annualSalary: 100000, color: 'var(--color-wrapper)', status: 'active' },
+  { role: 'CTO', headcount: 1, annualSalary: 190000, color: 'var(--color-frontier)', status: 'future', startMonth: 3 },
+  { role: 'ML / Video Pipeline', headcount: 1, annualSalary: 175000, color: 'var(--color-ancillary)', status: 'future', startMonth: 6 },
+  { role: 'Technical PM', headcount: 1, annualSalary: 145000, color: 'var(--color-public)', status: 'future', startMonth: 6 },
+  { role: 'Customer Support', headcount: 1, annualSalary: 55000, color: 'var(--color-up)', status: 'future', startMonth: 9 },
 ];
 
 export interface FixedCost {
@@ -69,24 +88,8 @@ export interface FixedCost {
 }
 
 export const fixedCosts: FixedCost[] = [
-  { category: 'Team (salaries + benefits)', monthly: 132000, annual: 1584000 },
-  { category: 'Infrastructure (non-COGS)', monthly: 25000, annual: 300000 },
-  { category: 'Tools & SaaS', monthly: 8000, annual: 96000 },
-  { category: 'Legal / compliance', monthly: 5000, annual: 60000 },
-  { category: 'Office / misc', monthly: 7000, annual: 84000 },
-];
-
-export interface Scenario {
-  name: string;
-  customers: number;
-  mrr: number;
-  grossProfit: number;
-  net: number;
-  salaryBump: number;
-}
-
-export const scenarios: Scenario[] = [
-  { name: 'Conservative', customers: 2500, mrr: 248000, grossProfit: 203000, net: 26000, salaryBump: 25000 },
-  { name: 'Target', customers: 5000, mrr: 495000, grossProfit: 406000, net: 229000, salaryBump: 40000 },
-  { name: 'Stretch', customers: 10000, mrr: 990000, grossProfit: 812000, net: 635000, salaryBump: 70000 },
+  { category: 'Infrastructure (non-COGS)', monthly: 15000, annual: 180000 },
+  { category: 'Tools & SaaS', monthly: 5000, annual: 60000 },
+  { category: 'Legal / compliance', monthly: 3000, annual: 36000 },
+  { category: 'Office / misc', monthly: 2000, annual: 24000 },
 ];
