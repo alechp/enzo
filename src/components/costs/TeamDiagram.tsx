@@ -65,8 +65,8 @@ export default function TeamDiagram() {
                     <span
                       class="font-mono text-[9px] uppercase tracking-[.1em] px-2 py-0.5 rounded"
                       classList={{
-                        'bg-up/20 text-up': role.status === 'active',
-                        'bg-ink-faint/20 text-ink-faint': role.status === 'future',
+                        'bg-up/20 text-up font-semibold': role.status === 'active',
+                        'bg-public/15 text-public': role.status === 'future',
                       }}
                     >
                       {role.status === 'active' ? 'Active' : `Planned — M${role.startMonth}`}
@@ -78,16 +78,21 @@ export default function TeamDiagram() {
                     </span>
 
                     {/* Annual salary (editable) */}
-                    <span class="font-mono text-[.86rem] text-ink-dim ml-auto max-[640px]:ml-0">
-                      <EditableValue
-                        value={role.annualSalary}
-                        onChange={(v) => updateRole(i(), 'annualSalary', v)}
-                        min={range().min}
-                        max={range().max}
-                        step={range().step}
-                        format={(v) => `${formatCurrency(v, true)}/yr`}
-                      />
-                    </span>
+                    <div class="ml-auto max-[640px]:ml-0 text-right">
+                      <div class="font-mono text-[.86rem] text-ink">
+                        <EditableValue
+                          value={role.annualSalary}
+                          onChange={(v) => updateRole(i(), 'annualSalary', v)}
+                          min={range().min}
+                          max={range().max}
+                          step={range().step}
+                          format={(v) => `${formatCurrency(v, true)}/yr`}
+                        />
+                      </div>
+                      <div class="font-mono text-[10px] text-ink-faint">
+                        {formatCurrency(taxes().fullyLoaded, true)}/yr loaded
+                      </div>
+                    </div>
                   </div>
 
                   {/* Tax / loaded cost summary row */}
@@ -98,7 +103,7 @@ export default function TeamDiagram() {
 
                     {/* Tax breakdown toggle */}
                     <button
-                      class="ml-auto text-[9px] font-mono text-ink-faint border border-line px-1.5 py-0.5 hover:border-acid hover:text-ink transition-colors"
+                      class="ml-auto text-[9px] font-mono text-ink-dim border border-line px-1.5 py-0.5 hover:border-acid hover:text-ink transition-colors"
                       onClick={() => setExpanded(!expanded())}
                     >
                       {expanded() ? 'Hide taxes' : 'Tax detail'}
