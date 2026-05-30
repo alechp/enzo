@@ -34,7 +34,7 @@ interface MonthRow {
 
 function makeDefaults(): ProjectionInputs {
   return {
-    startingCustomers: 0,
+    startingCustomers: 50,
     arpu: 99,
     growthRate: 15,
     churnRate: 5,

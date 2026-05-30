@@ -14,6 +14,8 @@ export const exits: ExitEvent[] = [
   { date: 'MAR 2026', company: 'PixVerse (AISphere)', event: 'Series C led by CDH; crosses unicorn line', amount: '~$300M · $1B+ val' },
   { date: 'JAN 2026', company: 'Higgsfield', event: 'Series A extension led by Accel; launch-to-unicorn in <1yr', amount: '$80M · $1.3B val' },
   { date: '2025', company: 'Pika Labs', event: 'Series B (consumer-social pivot)', amount: '~$80M' },
+  { date: 'FEB 2026', company: 'ElevenLabs', event: 'Series D led by Sequoia; ~$500M ARR; eyeing IPO', amount: '$500M · $11B val' },
+  { date: 'MAR 2026', company: 'Reactor', event: 'Series A led by Lightspeed; real-time AI video from ex-Apple team', amount: '$59M' },
   { date: 'MAY 2026', company: 'Kling (Kuaishou)', event: 'assessing spinoff/restructure + ~$2B raise', amount: '~$20B rumored val' },
   { date: 'MAR 2026', company: 'Sora (OpenAI)', event: 'app shutdown; ≠ exit, a strategic retreat', amount: 'retired' },
 ];

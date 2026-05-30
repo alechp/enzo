@@ -69,10 +69,10 @@ const MarketAnalysis: Component = () => {
             <span class="text-ink-dim mr-1">Geography</span> Global
           </div>
           <div>
-            <span class="text-ink-dim mr-1">Capital tracked</span> $7.5B+
+            <span class="text-ink-dim mr-1">Capital tracked</span> $9B+
           </div>
           <div>
-            <span class="text-ink-dim mr-1">Companies</span> 32
+            <span class="text-ink-dim mr-1">Companies</span> 33
           </div>
         </div>
       </header>
@@ -157,9 +157,9 @@ const MarketAnalysis: Component = () => {
 
             {/* Callout */}
             <div class="border-l-[3px] border-frontier bg-panel p-4 text-[.92rem] text-ink-dim mt-[18px]">
-              <strong class="text-ink">The Sora lesson:</strong> OpenAI's Sora reportedly burns{' '}
-              <strong class="text-ink">~$15M/day</strong> on inference costs as of early 2025, a
-              structural problem that persists across frontier labs. Application-layer companies
+              <strong class="text-ink">The Sora lesson:</strong> OpenAI's Sora reportedly burned{' '}
+              <strong class="text-ink">~$15M/day</strong> on inference costs before its April 2026
+              shutdown — a structural problem that persists across frontier labs. Application-layer companies
               avoid this trap by routing to the cheapest adequate model — switching costs are low
               when you own the customer relationship and the workflow, not the weights.
             </div>
@@ -189,10 +189,10 @@ const MarketAnalysis: Component = () => {
 
         <div class="mb-8">
           <p class="text-[.94rem] text-ink-dim leading-relaxed mb-4">
-            Over <strong class="text-ink">$5.3B in venture capital</strong> has been deployed into
+            Over <strong class="text-ink">$6.1B in venture capital</strong> has been deployed into
             AI video generation startups since 2021, with total capital (including public-market
             investments, grants, and debt) exceeding{' '}
-            <strong class="text-ink">$7.5B</strong>. The largest rounds have gone to frontier labs
+            <strong class="text-ink">$9B</strong>. The largest rounds have gone to frontier labs
             — Runway ($241M Series C at $4B valuation), and Kling's parent Kuaishou (public, HK:1024).
           </p>
           <p class="text-[.94rem] text-ink-dim leading-relaxed mb-4">

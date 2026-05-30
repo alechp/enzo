@@ -13,8 +13,8 @@ export const marketSizeKpis: Kpi[] = [
 ];
 
 export const capitalKpis: Kpi[] = [
-  { label: 'Disclosed VC into pure-plays', value: '~$5.3B', note: 'Runway, Luma, MiniMax, Synthesia, HeyGen, Pika, Higgsfield, PixVerse, Vidu', color: 'acid' },
-  { label: 'Total tracked (incl. ancillary)', value: '~$7.5B+', note: 'Adds ElevenLabs, Lightricks & infra; excludes parent-funded models' },
+  { label: 'Disclosed VC into pure-plays', value: '~$6.1B', note: 'Runway, Luma, MiniMax, Synthesia, HeyGen, Pika, Higgsfield, PixVerse, Vidu, Reactor', color: 'acid' },
+  { label: 'Total tracked (incl. ancillary)', value: '~$9B+', note: 'Adds ElevenLabs ($500M), Lightricks & infra; excludes parent-funded models' },
   { label: 'Confirmed exits (IPO)', value: '1', note: 'MiniMax — Hong Kong IPO, Jan 2026, ~$619M raised', color: 'frontier' },
   { label: 'M&A exits to date', value: '0', note: 'Pika–Meta talks (2025) did not close; no completed acq.', color: 'wrapper' },
 ];

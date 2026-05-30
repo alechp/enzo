@@ -25,19 +25,19 @@ const tokens: TokenCard[] = [
     tokenKey: 'IMGNAI',
     marketCap: '~$3.5M',
     athDrop: '−96% from ATH',
-    date: 'Snapshot: May 2025',
+    date: 'Snapshot: May 2026',
   },
   {
     name: 'Render',
     url: 'https://rendernetwork.com',
-    ticker: '$RNDR',
+    ticker: '$RENDER',
     description:
-      'Decentralized GPU rendering network. Migrated to Solana. Used for rendering compute tasks including AI video.',
-    price: '~$2.07',
+      'Decentralized GPU rendering network. Rebranded from RNDR; migrated to Solana. Used for rendering compute tasks including AI video.',
+    price: '~$2.00',
     tokenKey: 'RNDR',
-    marketCap: '~$1.08B',
+    marketCap: '~$1.03B',
     athDrop: '−85% from ATH',
-    date: 'Snapshot: May 2025',
+    date: 'Snapshot: May 2026',
   },
   {
     name: 'Virtuals Protocol',
@@ -49,7 +49,7 @@ const tokens: TokenCard[] = [
     tokenKey: 'VIRTUAL',
     marketCap: '~$473M',
     athDrop: '−82% from ATH',
-    date: 'Snapshot: May 2025',
+    date: 'Snapshot: May 2026',
   },
   {
     name: 'Charms.ai',
@@ -57,7 +57,7 @@ const tokens: TokenCard[] = [
       'AI avatar and video platform. No tradable token issued — operating as a traditional SaaS/web3 hybrid.',
     price: '—',
     noToken: true,
-    date: 'As of May 2025',
+    date: 'As of May 2026',
   },
   {
     name: 'Bittensor',
@@ -65,10 +65,10 @@ const tokens: TokenCard[] = [
     ticker: '$TAO',
     description:
       'Decentralized machine-learning network. Subnets compete to provide AI services; miners earn TAO for compute.',
-    price: '~$347',
+    price: '~$252',
     tokenKey: 'TAO',
-    marketCap: '~$3.3B',
-    date: 'Snapshot: May 2025',
+    marketCap: '~$2.4B',
+    date: 'Snapshot: May 2026',
   },
   {
     name: 'Meme coins',
@@ -78,7 +78,7 @@ const tokens: TokenCard[] = [
     price: '<$0.001',
     tokenKey: 'MEME',
     marketCap: 'sub-cent micro-caps',
-    date: 'Snapshot: May 2025',
+    date: 'Snapshot: May 2026',
   },
 ];
 
