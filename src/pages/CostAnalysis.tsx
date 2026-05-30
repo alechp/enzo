@@ -5,6 +5,7 @@ import TeamDiagram from '../components/costs/TeamDiagram';
 import UnitEconomics from '../components/costs/UnitEconomics';
 import FinancialProjections from '../components/costs/FinancialProjections';
 import CommentThread from '../components/costs/CommentThread';
+import SaveScenario, { SavedBanner } from '../components/costs/SaveScenario';
 
 export default function CostAnalysis() {
   return (
@@ -32,6 +33,8 @@ export default function CostAnalysis() {
           that define Enzo's path from launch to scale.
         </p>
       </header>
+
+      <SavedBanner />
 
       {/* 01: Comp Slider */}
       <section class="py-[54px] border-b border-line">
@@ -73,6 +76,8 @@ export default function CostAnalysis() {
         <FinancialProjections />
         <CommentThread sectionId="financial-projections" />
       </section>
+
+      <SaveScenario />
     </>
   );
 }
