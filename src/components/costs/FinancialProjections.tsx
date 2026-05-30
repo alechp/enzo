@@ -65,6 +65,13 @@ export default function FinancialProjections() {
     if (saved) setInputs(reconcile(saved));
   });
 
+  const startDate = new Date();
+  const monthLabels = Array.from({ length: 24 }, (_, i) => {
+    const d = new Date(startDate);
+    d.setMonth(d.getMonth() + i);
+    return d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+  });
+
   const persist = () => saveToDisk({ ...inputs });
 
   const update = <K extends keyof ProjectionInputs>(key: K, value: ProjectionInputs[K]) => {
@@ -175,10 +182,12 @@ export default function FinancialProjections() {
     const makePath = (vals: number[]) =>
       vals.map((v, i) => `${i === 0 ? 'M' : 'L'}${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
 
+    const zeroY = (minVal <= 0 && maxVal >= 0) ? toY(0) : null;
     return {
       mrrPath: makePath(mrrVals),
       expPath: makePath(expVals),
       cashPath: makePath(cashVals),
+      zeroY,
     };
   });
 
@@ -363,13 +372,27 @@ export default function FinancialProjections() {
         <h3 class="font-display font-semibold text-[1.2rem] mb-5">Trend</h3>
         <div class="bg-panel border border-line p-4">
           <svg
-            viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+            viewBox={`0 0 ${chartWidth} ${chartHeight + 24}`}
             class="w-full h-auto"
             preserveAspectRatio="none"
           >
+            {chartData().zeroY !== null && (
+              <line x1={chartPadding} y1={chartData().zeroY!} x2={chartWidth - chartPadding} y2={chartData().zeroY!} stroke="var(--color-line)" stroke-width="1" stroke-dasharray="4,4" />
+            )}
             <path d={chartData().cashPath} fill="none" stroke="var(--color-wrapper)" stroke-width="2" />
             <path d={chartData().expPath} fill="none" stroke="var(--color-down)" stroke-width="2" />
             <path d={chartData().mrrPath} fill="none" stroke="var(--color-acid)" stroke-width="2" />
+            {[0, 3, 6, 9, 12, 15, 18, 21, 23].map((i) => {
+              const x = chartPadding + ((chartWidth - 2 * chartPadding) / 23) * i;
+              return (
+                <>
+                  <line x1={x} y1={chartHeight - chartPadding} x2={x} y2={chartHeight - chartPadding + 6} stroke="var(--color-line-bright)" stroke-width="1" />
+                  <text x={x} y={chartHeight + 14} text-anchor="middle" fill="var(--color-ink-faint)" font-size="9" font-family="var(--font-mono)">
+                    {monthLabels[i]}
+                  </text>
+                </>
+              );
+            })}
           </svg>
           <div class="flex gap-6 mt-3 justify-center">
             <div class="flex items-center gap-2">
@@ -426,7 +449,7 @@ export default function FinancialProjections() {
                       }}
                     >
                       <td class="py-2 pr-3 text-ink-dim sticky left-0 bg-bg z-10">
-                        M{row.month}
+                        M{row.month} <span class="text-ink-faint text-[10px]">{monthLabels[row.month]}</span>
                       </td>
                       <td class="py-2 pr-3 text-ink">
                         {formatNumber(row.endCustomers)}
