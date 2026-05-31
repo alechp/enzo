@@ -26,8 +26,8 @@ export function SavedBanner() {
 
   return (
     <Show when={getUsername()}>
-      <div class="bg-panel border border-acid/20 px-4 py-2 mt-4 flex items-center gap-3 font-mono text-[11px]">
-        <span class="w-[6px] h-[6px] rounded-full bg-acid inline-block" style="box-shadow:0 0 6px var(--color-acid)" />
+      <div class="bg-panel border border-acid/20 px-4 py-2 mt-4 flex items-center gap-3 font-mono text-[11px] flex-wrap">
+        <span class="w-[6px] h-[6px] rounded-full bg-acid inline-block shrink-0" style="box-shadow:0 0 6px var(--color-acid)" />
         <span class="text-acid">Scenario by {getUsername()}</span>
         <span class="text-ink-faint">saved {relativeTime(getSavedAt())}</span>
         <button
@@ -77,34 +77,36 @@ export default function SaveScenario() {
           <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-3">
             Before saving, enter a name so others know who configured this:
           </div>
-          <div class="flex gap-2">
+          <div class="flex gap-2 flex-wrap max-[480px]:flex-col">
             <input
               type="text"
-              class="flex-1 bg-panel border border-line text-ink font-mono text-sm px-3 py-2 outline-none focus:border-acid transition-colors"
+              class="flex-1 min-w-0 bg-panel border border-line text-ink font-mono text-sm px-3 py-2 outline-none focus:border-acid transition-colors"
               placeholder="Enter your name..."
               value={nameInput()}
               onInput={(e) => setNameInput(e.currentTarget.value)}
               onKeyDown={handleKeyDown}
               autofocus
             />
-            <button
-              class="px-4 py-2 text-sm font-mono bg-acid text-black border border-acid hover:brightness-110 transition-colors"
-              onClick={handleSubmitName}
-            >
-              Save
-            </button>
-            <button
-              class="px-4 py-2 text-sm font-mono bg-panel-2 border border-line text-ink-faint hover:text-ink hover:border-acid transition-colors"
-              onClick={() => setPrompting(false)}
-            >
-              Cancel
-            </button>
+            <div class="flex gap-2 shrink-0">
+              <button
+                class="px-4 py-2 text-sm font-mono bg-acid text-black border border-acid hover:brightness-110 transition-colors"
+                onClick={handleSubmitName}
+              >
+                Save
+              </button>
+              <button
+                class="px-4 py-2 text-sm font-mono bg-panel-2 border border-line text-ink-faint hover:text-ink hover:border-acid transition-colors"
+                onClick={() => setPrompting(false)}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </Show>
 
       <Show when={!prompting()}>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 flex-wrap">
           <button
             class={`px-5 py-2.5 text-sm font-mono border transition-colors ${
               saved()

@@ -207,7 +207,7 @@ export default function FinancialProjections() {
           </Show>
         </div>
 
-        <div class="grid grid-cols-4 gap-4 max-[1024px]:grid-cols-3 max-[768px]:grid-cols-2 max-[480px]:grid-cols-1">
+        <div class="grid grid-cols-4 gap-4 max-[1024px]:grid-cols-3 max-[880px]:grid-cols-2 max-[480px]:grid-cols-1">
           <div class="bg-panel border border-line p-4">
             <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
               Starting Customers (M0)
@@ -325,7 +325,7 @@ export default function FinancialProjections() {
       {/* Summary KPIs */}
       <div>
         <h3 class="font-display font-semibold text-[1.2rem] mb-5">Key Metrics</h3>
-        <div class="grid grid-cols-4 gap-4 max-[1024px]:grid-cols-2 max-[480px]:grid-cols-1">
+        <div class="grid grid-cols-4 gap-4 max-[880px]:grid-cols-2 max-[480px]:grid-cols-1">
           <div class="bg-panel border border-line p-4">
             <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
               Break-even Month
@@ -382,7 +382,7 @@ export default function FinancialProjections() {
             <path d={chartData().cashPath} fill="none" stroke="var(--color-wrapper)" stroke-width="2" />
             <path d={chartData().expPath} fill="none" stroke="var(--color-down)" stroke-width="2" />
             <path d={chartData().mrrPath} fill="none" stroke="var(--color-acid)" stroke-width="2" />
-            {[0, 3, 6, 9, 12, 15, 18, 21, 23].map((i) => {
+            {[0, 6, 12, 18, 23].map((i) => {
               const x = chartPadding + ((chartWidth - 2 * chartPadding) / 23) * i;
               return (
                 <>
@@ -394,18 +394,18 @@ export default function FinancialProjections() {
               );
             })}
           </svg>
-          <div class="flex gap-6 mt-3 justify-center">
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-[2px] bg-acid" />
-              <span class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint">MRR</span>
+          <div class="flex gap-4 mt-3 justify-center flex-wrap max-[480px]:gap-2">
+            <div class="flex items-center gap-1.5">
+              <div class="w-3 h-[2px] bg-acid" />
+              <span class="font-mono text-[9px] uppercase tracking-[.1em] text-ink-faint">MRR</span>
             </div>
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-[2px] bg-down" />
-              <span class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint">Total Expenses</span>
+            <div class="flex items-center gap-1.5">
+              <div class="w-3 h-[2px] bg-down" />
+              <span class="font-mono text-[9px] uppercase tracking-[.1em] text-ink-faint">Expenses</span>
             </div>
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-[2px] bg-wrapper" />
-              <span class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint">Cash Balance</span>
+            <div class="flex items-center gap-1.5">
+              <div class="w-3 h-[2px] bg-wrapper" />
+              <span class="font-mono text-[9px] uppercase tracking-[.1em] text-ink-faint">Cash</span>
             </div>
           </div>
         </div>
@@ -449,7 +449,7 @@ export default function FinancialProjections() {
                       }}
                     >
                       <td class="py-2 pr-3 text-ink-dim sticky left-0 bg-bg z-10">
-                        M{row.month} <span class="text-ink-faint text-[10px]">{monthLabels[row.month]}</span>
+                        M{row.month} <span class="text-ink-faint text-[10px] hidden min-[640px]:inline">{monthLabels[row.month]}</span>
                       </td>
                       <td class="py-2 pr-3 text-ink">
                         {formatNumber(row.endCustomers)}
