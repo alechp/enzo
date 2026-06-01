@@ -36,9 +36,9 @@ function makeDefaults(): ProjectionInputs {
   return {
     startingCustomers: 50,
     arpu: 99,
-    growthRate: 15,
-    churnRate: 5,
-    grossMargin: 82,
+    growthRate: 20,
+    churnRate: 10,
+    grossMargin: 80,
     cac: 45,
     seedFunding: 500000,
   };
