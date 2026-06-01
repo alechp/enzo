@@ -78,13 +78,13 @@ export default function TeamDiagram() {
                         {role.role === 'CEO' ? 'CEO Salary' : role.role}
                       </span>
                       <Show when={role.role === 'CEO'}>
-                        <span class="font-mono text-[11px] text-ink-faint">(deferred comp — editable)</span>
+                        <span class="font-mono text-[.8rem] text-ink-faint">(deferred comp — editable)</span>
                       </Show>
                     </div>
 
                     {/* Status badge */}
                     <span
-                      class="font-mono text-[10px] uppercase tracking-[.1em] px-2.5 py-1 rounded"
+                      class="font-mono text-[.75rem] uppercase tracking-[.1em] px-2.5 py-1 rounded"
                       classList={{
                         'bg-up/20 text-up font-semibold': role.status === 'active',
                         'bg-public/15 text-public': role.status === 'future',
@@ -94,7 +94,7 @@ export default function TeamDiagram() {
                     </span>
 
                     {/* Headcount */}
-                    <span class="font-mono text-[11px] bg-panel-2 px-2.5 py-1 rounded text-ink-faint">
+                    <span class="font-mono text-[.8rem] bg-panel-2 px-2.5 py-1 rounded text-ink-faint">
                       {role.headcount} {role.headcount === 1 ? 'person' : 'people'}
                     </span>
 
@@ -110,19 +110,19 @@ export default function TeamDiagram() {
                           format={(v) => `${formatCurrency(v, true)}/yr`}
                         />
                       </div>
-                      <div class="font-mono text-[12px] text-acid">
+                      <div class="font-mono text-[.88rem] text-acid">
                         {formatCurrency(taxes().fullyLoaded, true)}/yr loaded
                       </div>
                     </div>
                   </div>
 
                   {/* Tax summary row */}
-                  <div class="flex items-center gap-5 mt-3 flex-wrap font-mono text-[12px]">
+                  <div class="flex items-center gap-5 mt-3 flex-wrap font-mono text-[.88rem]">
                     <span class="text-ink-faint">Tax burden: <span class="text-ink">{formatCurrency(taxes().total, true)}</span></span>
                     <span class="text-ink-faint">Monthly: <span class="text-ink">{formatCurrency(taxes().fullyLoaded / 12, true)}/mo</span></span>
 
                     <button
-                      class="ml-auto text-[11px] font-mono text-ink-dim border border-line px-2 py-1 hover:border-acid hover:text-ink transition-colors"
+                      class="ml-auto text-[.8rem] font-mono text-ink-dim border border-line px-2.5 py-1 hover:border-acid hover:text-ink transition-colors"
                       onClick={() => setExpanded(!expanded())}
                     >
                       {expanded() ? 'Hide taxes' : 'Tax detail'}
@@ -132,7 +132,7 @@ export default function TeamDiagram() {
                   {/* Expanded tax breakdown */}
                   <Show when={expanded()}>
                     <div class="mt-4 ml-1 border-l-2 border-line pl-4">
-                      <table class="text-[12px] font-mono">
+                      <table class="text-[.85rem] font-mono">
                         <tbody>
                           <tr><td class="pr-6 py-1 text-ink-faint">Social Security</td><td class="text-ink">{formatCurrency(taxes().socialSecurity)}</td></tr>
                           <tr><td class="pr-6 py-1 text-ink-faint">Medicare</td><td class="text-ink">{formatCurrency(taxes().medicare)}</td></tr>
@@ -153,7 +153,7 @@ export default function TeamDiagram() {
 
       {/* Summary bar */}
       <div class="bg-panel border border-line p-5 mt-0">
-        <div class="flex gap-6 flex-wrap font-mono text-[13px] items-center">
+        <div class="flex gap-6 flex-wrap font-mono text-[.92rem] items-center">
           <span class="text-ink-faint">
             <span class="text-ink font-semibold">{activeHeadcount()}</span> / <span class="text-ink font-semibold">{totalHeadcount()}</span> headcount
           </span>
