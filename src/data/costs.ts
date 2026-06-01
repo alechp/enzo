@@ -48,6 +48,94 @@ export function computeEmployerTaxes(annualSalary: number): EmployerTaxBreakdown
   };
 }
 
+export type TaxLocation = 'PR' | 'CA' | 'US-default';
+
+export interface EmployeeTaxBreakdown {
+  federalIncome: number;
+  stateIncome: number;
+  employeeSS: number;
+  employeeMedicare: number;
+  totalEmployeeTax: number;
+  annualTakeHome: number;
+  monthlyGross: number;
+  monthlyTakeHome: number;
+}
+
+export function computeEmployeeTaxes(annualSalary: number, location: TaxLocation): EmployeeTaxBreakdown {
+  // Federal income tax (2026 brackets, simplified progressive)
+  let federalIncome = 0;
+  if (location === 'PR') {
+    // PR residents: exempt from federal income tax on PR-sourced income
+    federalIncome = 0;
+  } else {
+    const brackets = [
+      { limit: 11600, rate: 0.10 },
+      { limit: 47150, rate: 0.12 },
+      { limit: 100525, rate: 0.22 },
+      { limit: 191950, rate: 0.24 },
+      { limit: 243725, rate: 0.32 },
+      { limit: 609350, rate: 0.35 },
+      { limit: Infinity, rate: 0.37 },
+    ];
+    let remaining = annualSalary;
+    let prev = 0;
+    for (const b of brackets) {
+      const taxable = Math.min(remaining, b.limit - prev);
+      if (taxable <= 0) break;
+      federalIncome += taxable * b.rate;
+      remaining -= taxable;
+      prev = b.limit;
+    }
+  }
+
+  // State income tax
+  let stateIncome = 0;
+  if (location === 'PR') {
+    // PR has its own tax: ~6.5% effective for $85k-$160k range (simplified flat)
+    stateIncome = annualSalary * 0.065;
+  } else if (location === 'CA') {
+    // CA progressive (simplified): ~9.3% effective for $150k-$250k range
+    const caBrackets = [
+      { limit: 10412, rate: 0.01 },
+      { limit: 24684, rate: 0.02 },
+      { limit: 38959, rate: 0.04 },
+      { limit: 54081, rate: 0.06 },
+      { limit: 68350, rate: 0.08 },
+      { limit: 349137, rate: 0.093 },
+      { limit: 418961, rate: 0.103 },
+      { limit: 698271, rate: 0.113 },
+      { limit: Infinity, rate: 0.123 },
+    ];
+    let remaining = annualSalary;
+    let prev = 0;
+    for (const b of caBrackets) {
+      const taxable = Math.min(remaining, b.limit - prev);
+      if (taxable <= 0) break;
+      stateIncome += taxable * b.rate;
+      remaining -= taxable;
+      prev = b.limit;
+    }
+  }
+
+  // Employee-side FICA
+  const employeeSS = Math.min(annualSalary, TAX_CONSTANTS.socialSecurityCap) * TAX_CONSTANTS.socialSecurityRate;
+  const employeeMedicare = annualSalary * TAX_CONSTANTS.medicareRate;
+
+  const totalEmployeeTax = federalIncome + stateIncome + employeeSS + employeeMedicare;
+  const annualTakeHome = annualSalary - totalEmployeeTax;
+
+  return {
+    federalIncome,
+    stateIncome,
+    employeeSS,
+    employeeMedicare,
+    totalEmployeeTax,
+    annualTakeHome,
+    monthlyGross: annualSalary / 12,
+    monthlyTakeHome: annualTakeHome / 12,
+  };
+}
+
 export interface VideoCost {
   component: string;
   min: number;
@@ -70,15 +158,16 @@ export interface TeamRole {
   color: string;
   status: 'active' | 'future';
   startMonth?: number;
+  location: TaxLocation;
 }
 
 export const teamRoles: TeamRole[] = [
-  { role: 'CEO', headcount: 1, annualSalary: 0, color: 'var(--color-acid)', status: 'active' },
-  { role: 'Business Development', headcount: 1, annualSalary: 100000, color: 'var(--color-wrapper)', status: 'active' },
-  { role: 'CTO', headcount: 1, annualSalary: 240000, color: 'var(--color-frontier)', status: 'active' },
-  { role: 'ML / Video Pipeline', headcount: 1, annualSalary: 175000, color: 'var(--color-ancillary)', status: 'future', startMonth: 6 },
-  { role: 'Technical PM', headcount: 1, annualSalary: 145000, color: 'var(--color-public)', status: 'future', startMonth: 6 },
-  { role: 'Customer Support', headcount: 1, annualSalary: 55000, color: 'var(--color-up)', status: 'future', startMonth: 9 },
+  { role: 'CEO', headcount: 1, annualSalary: 160000, color: 'var(--color-acid)', status: 'active', location: 'PR' },
+  { role: 'Business Development', headcount: 1, annualSalary: 85000, color: 'var(--color-wrapper)', status: 'active', location: 'PR' },
+  { role: 'CTO', headcount: 1, annualSalary: 240000, color: 'var(--color-frontier)', status: 'active', location: 'CA' },
+  { role: 'ML / Video Pipeline', headcount: 1, annualSalary: 175000, color: 'var(--color-ancillary)', status: 'future', startMonth: 6, location: 'US-default' },
+  { role: 'Technical PM', headcount: 1, annualSalary: 145000, color: 'var(--color-public)', status: 'future', startMonth: 6, location: 'US-default' },
+  { role: 'Customer Support', headcount: 1, annualSalary: 55000, color: 'var(--color-up)', status: 'future', startMonth: 9, location: 'US-default' },
 ];
 
 export interface FixedCost {
