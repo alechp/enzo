@@ -3,7 +3,11 @@ import FontSizeControl from './FontSizeControl';
 
 export default function Nav() {
   const location = useLocation();
-  const isActive = (path: string) => location.pathname === path;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const isActive = (path: string) => {
+    const fullPath = base + (path === '/' ? '/' : path);
+    return location.pathname === fullPath || location.pathname === fullPath + '/';
+  };
 
   return (
     <nav class="sticky top-0 z-40 flex items-center justify-between py-4 bg-bg/95 backdrop-blur-sm border-b border-line">
