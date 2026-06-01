@@ -34,7 +34,7 @@ interface MonthRow {
 
 function makeDefaults(): ProjectionInputs {
   return {
-    startingCustomers: 50,
+    startingCustomers: 250,
     arpu: 99,
     growthRate: 20,
     churnRate: 10,
@@ -60,6 +60,7 @@ export default function FinancialProjections() {
   const defaults = makeDefaults();
   const [inputs, setInputs] = createStore<ProjectionInputs>(makeDefaults());
   const [selectedMonth, setSelectedMonth] = createSignal<number | null>(null);
+  const [hoverMonth, setHoverMonth] = createSignal<number | null>(null);
 
   onMount(() => {
     const saved = loadSaved();
@@ -91,10 +92,8 @@ export default function FinancialProjections() {
     localStorage.removeItem(STORAGE_KEY);
   };
 
-  // Fixed costs total (from data)
   const totalFixedCosts = () => fixedCosts.reduce((sum, f) => sum + f.monthly, 0);
 
-  // Compute 24-month projection
   const rows = createMemo((): MonthRow[] => {
     const result: MonthRow[] = [];
     const gr = inputs.growthRate / 100;
@@ -148,21 +147,17 @@ export default function FinancialProjections() {
     return result;
   });
 
-  // Summary KPIs
   const breakEvenMonth = createMemo(() => {
     const r = rows();
     const idx = r.findIndex((row) => row.netIncome >= 0);
     return idx >= 0 ? idx : -1;
   });
 
-  const m24Mrr = () => rows()[23]?.mrr ?? 0;
-  const m24Customers = () => rows()[23]?.endCustomers ?? 0;
-  const m24Cash = () => rows()[23]?.cashBalance ?? 0;
+  const cashAt = (m: number) => rows()[m]?.cashBalance ?? 0;
 
-  // SVG chart helpers
   const chartWidth = 720;
   const chartHeight = 200;
-  const chartPadding = 4;
+  const chartPadding = 24;
 
   const chartData = createMemo(() => {
     const r = rows();
@@ -184,13 +179,38 @@ export default function FinancialProjections() {
       vals.map((v, i) => `${i === 0 ? 'M' : 'L'}${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
 
     const zeroY = (minVal <= 0 && maxVal >= 0) ? toY(0) : null;
+
+    const points = r.map((_, i) => ({
+      x: toX(i),
+      mrrY: toY(mrrVals[i]),
+      expY: toY(expVals[i]),
+      cashY: toY(cashVals[i]),
+    }));
+
     return {
       mrrPath: makePath(mrrVals),
       expPath: makePath(expVals),
       cashPath: makePath(cashVals),
       zeroY,
+      points,
     };
   });
+
+  let chartContainerRef: HTMLDivElement | undefined;
+
+  const handleChartMouseMove = (e: MouseEvent) => {
+    if (!chartContainerRef) return;
+    const rect = chartContainerRef.getBoundingClientRect();
+    const svgWidth = rect.width;
+    const relX = e.clientX - rect.left;
+    const dataWidth = chartWidth - 2 * chartPadding;
+    const normalizedX = (relX / svgWidth) * chartWidth - chartPadding;
+    const monthIdx = Math.round((normalizedX / dataWidth) * 23);
+    const clamped = Math.min(Math.max(monthIdx, 0), 23);
+    setHoverMonth(clamped);
+  };
+
+  const handleChartMouseLeave = () => setHoverMonth(null);
 
   return (
     <div class="mt-6 space-y-10">
@@ -323,10 +343,10 @@ export default function FinancialProjections() {
         </div>
       </div>
 
-      {/* Summary KPIs */}
+      {/* Summary KPIs — Row 1: Break-even + M24 metrics */}
       <div>
         <h3 class="font-display font-semibold text-[1.2rem] mb-5">Key Metrics</h3>
-        <div class="grid grid-cols-4 gap-4 max-[880px]:grid-cols-2 max-[480px]:grid-cols-1">
+        <div class="grid grid-cols-4 gap-4 max-[880px]:grid-cols-2 max-[480px]:grid-cols-1 mb-4">
           <div class="bg-panel border border-line p-4">
             <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
               Break-even Month
@@ -341,7 +361,10 @@ export default function FinancialProjections() {
               M24 MRR
             </div>
             <div class="font-display font-black text-[1.8rem] leading-none text-ink">
-              {formatCurrency(m24Mrr(), true)}
+              {formatCurrency(rows()[23]?.mrr ?? 0, true)}
+            </div>
+            <div class="font-mono text-[10px] text-ink-faint mt-1">
+              ARR {formatCurrency((rows()[23]?.mrr ?? 0) * 12, true)}
             </div>
           </div>
 
@@ -350,28 +373,51 @@ export default function FinancialProjections() {
               M24 Customers
             </div>
             <div class="font-display font-black text-[1.8rem] leading-none text-ink">
-              {formatNumber(m24Customers())}
+              {formatNumber(rows()[23]?.endCustomers ?? 0)}
             </div>
           </div>
 
           <div class="bg-panel border border-line p-4">
             <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
-              Cash at M24
+              M24 Net Income
             </div>
             <div
               class="font-display font-black text-[1.8rem] leading-none"
-              classList={{ 'text-up': m24Cash() >= 0, 'text-down': m24Cash() < 0 }}
+              classList={{ 'text-up': (rows()[23]?.netIncome ?? 0) >= 0, 'text-down': (rows()[23]?.netIncome ?? 0) < 0 }}
             >
-              {formatCurrency(m24Cash(), true)}
+              {formatCurrency(rows()[23]?.netIncome ?? 0, true)}
             </div>
           </div>
         </div>
+
+        {/* Row 2: Cash at M6, M12, M18, M24 */}
+        <div class="grid grid-cols-4 gap-4 max-[880px]:grid-cols-2 max-[480px]:grid-cols-1">
+          {[5, 11, 17, 23].map((m) => (
+            <div class="bg-panel border border-line p-4">
+              <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
+                Cash at M{m + 1}
+              </div>
+              <div
+                class="font-display font-black text-[1.4rem] leading-none"
+                classList={{ 'text-up': cashAt(m) >= 0, 'text-down': cashAt(m) < 0 }}
+              >
+                {formatCurrency(cashAt(m), true)}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* SVG Mini Chart */}
+      {/* Interactive SVG Chart */}
       <div>
         <h3 class="font-display font-semibold text-[1.2rem] mb-5">Trend</h3>
-        <div class="bg-panel border border-line p-4">
+        <div
+          ref={chartContainerRef}
+          class="bg-panel border border-line p-4 relative"
+          onMouseMove={handleChartMouseMove}
+          onMouseLeave={handleChartMouseLeave}
+          style={{ cursor: 'crosshair' }}
+        >
           <svg
             viewBox={`0 0 ${chartWidth} ${chartHeight + 24}`}
             class="w-full h-auto"
@@ -383,6 +429,24 @@ export default function FinancialProjections() {
             <path d={chartData().cashPath} fill="none" stroke="var(--color-wrapper)" stroke-width="2" />
             <path d={chartData().expPath} fill="none" stroke="var(--color-down)" stroke-width="2" />
             <path d={chartData().mrrPath} fill="none" stroke="var(--color-acid)" stroke-width="2" />
+
+            {/* Hover vertical line + dots */}
+            <Show when={hoverMonth() !== null}>
+              {(() => {
+                const m = hoverMonth()!;
+                const pt = chartData().points[m];
+                return (
+                  <>
+                    <line x1={pt.x} y1={chartPadding} x2={pt.x} y2={chartHeight - chartPadding} stroke="var(--color-ink-faint)" stroke-width="1" stroke-dasharray="2,2" />
+                    <circle cx={pt.x} cy={pt.mrrY} r="4" fill="var(--color-acid)" />
+                    <circle cx={pt.x} cy={pt.expY} r="4" fill="var(--color-down)" />
+                    <circle cx={pt.x} cy={pt.cashY} r="4" fill="var(--color-wrapper)" />
+                  </>
+                );
+              })()}
+            </Show>
+
+            {/* X-axis labels */}
             {[0, 6, 12, 18, 23].map((i) => {
               const x = chartPadding + ((chartWidth - 2 * chartPadding) / 23) * i;
               return (
@@ -395,6 +459,68 @@ export default function FinancialProjections() {
               );
             })}
           </svg>
+
+          {/* Hover tooltip */}
+          <Show when={hoverMonth() !== null}>
+            {(() => {
+              const m = hoverMonth()!;
+              const row = rows()[m];
+              const pt = chartData().points[m];
+              const tooltipLeft = () => {
+                const pct = pt.x / chartWidth * 100;
+                return pct > 70 ? 'auto' : `${pct}%`;
+              };
+              const tooltipRight = () => {
+                const pct = pt.x / chartWidth * 100;
+                return pct > 70 ? `${100 - pct}%` : 'auto';
+              };
+              return (
+                <div
+                  class="absolute bg-bg border border-line rounded p-3 pointer-events-none z-20 min-w-[200px]"
+                  style={{
+                    top: '8px',
+                    left: tooltipLeft(),
+                    right: tooltipRight(),
+                  }}
+                >
+                  <div class="font-mono text-[10px] text-acid uppercase tracking-[.14em] mb-2">
+                    M{m} — {monthLabels[m]}
+                  </div>
+                  <div class="space-y-1 font-mono text-[11px]">
+                    <div class="flex justify-between gap-4">
+                      <span class="text-ink-faint">MRR</span>
+                      <span class="text-acid">{formatCurrency(row.mrr, true)}</span>
+                    </div>
+                    <div class="flex justify-between gap-4">
+                      <span class="text-ink-faint">ARR</span>
+                      <span class="text-acid">{formatCurrency(row.mrr * 12, true)}</span>
+                    </div>
+                    <div class="flex justify-between gap-4 border-t border-line pt-1 mt-1">
+                      <span class="text-ink-faint">Expenses</span>
+                      <span class="text-down">{formatCurrency(row.totalExpenses, true)}</span>
+                    </div>
+                    <div class="flex justify-between gap-4">
+                      <span class="text-ink-faint">Net Income</span>
+                      <span classList={{ 'text-up': row.netIncome >= 0, 'text-down': row.netIncome < 0 }}>
+                        {formatCurrency(row.netIncome, true)}
+                      </span>
+                    </div>
+                    <div class="flex justify-between gap-4 border-t border-line pt-1 mt-1">
+                      <span class="text-ink-faint">Cash</span>
+                      <span classList={{ 'text-up': row.cashBalance >= 0, 'text-down': row.cashBalance < 0 }}>
+                        {formatCurrency(row.cashBalance, true)}
+                      </span>
+                    </div>
+                    <div class="flex justify-between gap-4">
+                      <span class="text-ink-faint">Customers</span>
+                      <span class="text-ink">{formatNumber(row.endCustomers)}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+          </Show>
+
           <div class="flex gap-4 mt-3 justify-center flex-wrap max-[480px]:gap-2">
             <div class="flex items-center gap-1.5">
               <div class="w-3 h-[2px] bg-acid" />
