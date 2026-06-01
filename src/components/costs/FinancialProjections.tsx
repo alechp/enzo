@@ -34,13 +34,13 @@ interface MonthRow {
 
 function makeDefaults(): ProjectionInputs {
   return {
-    startingCustomers: 250,
+    startingCustomers: 50,
     arpu: 99,
-    growthRate: 20,
+    growthRate: 30,
     churnRate: 10,
     grossMargin: 80,
     cac: 45,
-    seedFunding: 500000,
+    seedFunding: 1500000,
   };
 }
 
