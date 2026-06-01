@@ -30,7 +30,7 @@ function NotFound() {
 }
 
 render(() => (
-  <Router root={AppShell}>
+  <Router root={AppShell} base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
     <Route path="/" component={MarketAnalysis} />
     <Route path="/costs" component={CostAnalysis} />
     <Route path="/team" component={TeamPage} />
