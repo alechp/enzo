@@ -21,16 +21,37 @@ export default function TeamDiagram() {
   const totalHeadcount = () =>
     roles.reduce((sum, r) => sum + r.headcount, 0);
 
+  const totalMonthlyLoaded = () =>
+    roles.reduce((sum, r) => sum + computeEmployerTaxes(r.annualSalary).fullyLoaded * r.headcount / 12, 0);
+
+  const totalAnnualLoaded = () =>
+    roles.reduce((sum, r) => sum + computeEmployerTaxes(r.annualSalary).fullyLoaded * r.headcount, 0);
+
+  const totalBaseSalary = () =>
+    roles.reduce((sum, r) => sum + r.annualSalary * r.headcount, 0);
+
+  const totalTaxBurden = () => totalAnnualLoaded() - totalBaseSalary();
+
   function salaryRange(role: TeamRole): { min: number; max: number; step: number } {
     if (role.role === 'CEO') return { min: 0, max: 300000, step: 5000 };
     if (role.role === 'BD') return { min: 50000, max: 200000, step: 5000 };
-    // future roles
     return { min: 50000, max: 300000, step: 5000 };
   }
 
   return (
     <div class="mt-6">
-      {/* Proportional block visualization */}
+      {/* Tax-adjusted callout */}
+      <div class="bg-panel border border-acid/20 p-5 mb-6">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-[6px] h-[6px] rounded-full bg-acid" style="box-shadow:0 0 6px var(--color-acid)" />
+          <span class="font-mono text-[11px] uppercase tracking-[.14em] text-acid font-semibold">Tax-Adjusted Costs</span>
+        </div>
+        <p class="text-ink-dim text-[.94rem] leading-relaxed">
+          All figures below include full US employer tax burden: Social Security (6.2%, capped at $170k), Medicare (1.45%), FUTA, SUTA, workers' comp, and $600/mo health insurance per employee. The "fully loaded" cost is what the company actually pays.
+        </p>
+      </div>
+
+      {/* Role rows */}
       <div class="border border-line flex flex-col gap-px bg-line">
         <For each={roles}>
           {(role, i) => {
@@ -45,25 +66,25 @@ export default function TeamDiagram() {
                 style={{
                   'background-color': `color-mix(in srgb, ${role.color} 10%, var(--color-panel))`,
                   'border-left': `3px solid ${role.color}`,
-                  'min-height': '60px',
+                  'min-height': '70px',
                   'flex-grow': Math.max(taxes().fullyLoaded / maxFullyLoaded(), 0.08),
                 }}
               >
-                <div class="p-4">
-                  <div class="flex items-center gap-3 flex-wrap max-[640px]:flex-col max-[640px]:items-start">
-                    {/* Role name + special label */}
+                <div class="p-5">
+                  <div class="flex items-center gap-4 flex-wrap max-[640px]:flex-col max-[640px]:items-start">
+                    {/* Role name */}
                     <div class="flex flex-col">
-                      <span class="font-body font-semibold text-ink">
+                      <span class="font-body font-semibold text-ink text-[1.1rem]">
                         {role.role === 'CEO' ? 'CEO Salary' : role.role}
                       </span>
                       <Show when={role.role === 'CEO'}>
-                        <span class="font-mono text-[9px] text-ink-faint">(deferred comp -- editable)</span>
+                        <span class="font-mono text-[11px] text-ink-faint">(deferred comp — editable)</span>
                       </Show>
                     </div>
 
                     {/* Status badge */}
                     <span
-                      class="font-mono text-[9px] uppercase tracking-[.1em] px-2 py-0.5 rounded"
+                      class="font-mono text-[10px] uppercase tracking-[.1em] px-2.5 py-1 rounded"
                       classList={{
                         'bg-up/20 text-up font-semibold': role.status === 'active',
                         'bg-public/15 text-public': role.status === 'future',
@@ -73,13 +94,13 @@ export default function TeamDiagram() {
                     </span>
 
                     {/* Headcount */}
-                    <span class="font-mono text-[10px] bg-panel-2 px-2 py-0.5 rounded text-ink-faint">
+                    <span class="font-mono text-[11px] bg-panel-2 px-2.5 py-1 rounded text-ink-faint">
                       {role.headcount} {role.headcount === 1 ? 'person' : 'people'}
                     </span>
 
-                    {/* Annual salary (editable) */}
+                    {/* Salary + loaded cost */}
                     <div class="ml-auto max-[640px]:ml-0 text-right">
-                      <div class="font-mono text-[.86rem] text-ink">
+                      <div class="font-mono text-[1rem] text-ink">
                         <EditableValue
                           value={role.annualSalary}
                           onChange={(v) => updateRole(i(), 'annualSalary', v)}
@@ -89,21 +110,19 @@ export default function TeamDiagram() {
                           format={(v) => `${formatCurrency(v, true)}/yr`}
                         />
                       </div>
-                      <div class="font-mono text-[10px] text-ink-faint">
+                      <div class="font-mono text-[12px] text-acid">
                         {formatCurrency(taxes().fullyLoaded, true)}/yr loaded
                       </div>
                     </div>
                   </div>
 
-                  {/* Tax / loaded cost summary row */}
-                  <div class="flex items-center gap-4 mt-2 flex-wrap font-mono text-[10px] text-ink-faint">
-                    <span>Tax burden: <span class="text-ink-dim">{formatCurrency(taxes().total, true)}</span></span>
-                    <span>Fully loaded: <span class="text-ink">{formatCurrency(taxes().fullyLoaded, true)}/yr</span></span>
-                    <span>Monthly: <span class="text-ink-dim">{formatCurrency(taxes().fullyLoaded / 12, true)}/mo</span></span>
+                  {/* Tax summary row */}
+                  <div class="flex items-center gap-5 mt-3 flex-wrap font-mono text-[12px]">
+                    <span class="text-ink-faint">Tax burden: <span class="text-ink">{formatCurrency(taxes().total, true)}</span></span>
+                    <span class="text-ink-faint">Monthly: <span class="text-ink">{formatCurrency(taxes().fullyLoaded / 12, true)}/mo</span></span>
 
-                    {/* Tax breakdown toggle */}
                     <button
-                      class="ml-auto text-[9px] font-mono text-ink-dim border border-line px-1.5 py-0.5 hover:border-acid hover:text-ink transition-colors"
+                      class="ml-auto text-[11px] font-mono text-ink-dim border border-line px-2 py-1 hover:border-acid hover:text-ink transition-colors"
                       onClick={() => setExpanded(!expanded())}
                     >
                       {expanded() ? 'Hide taxes' : 'Tax detail'}
@@ -112,15 +131,15 @@ export default function TeamDiagram() {
 
                   {/* Expanded tax breakdown */}
                   <Show when={expanded()}>
-                    <div class="mt-3 ml-1 border-l-2 border-line pl-3">
-                      <table class="text-[11px] font-mono">
+                    <div class="mt-4 ml-1 border-l-2 border-line pl-4">
+                      <table class="text-[12px] font-mono">
                         <tbody>
-                          <tr><td class="pr-4 py-0.5 text-ink-faint">Social Security</td><td class="text-ink-dim">{formatCurrency(taxes().socialSecurity)}</td></tr>
-                          <tr><td class="pr-4 py-0.5 text-ink-faint">Medicare</td><td class="text-ink-dim">{formatCurrency(taxes().medicare)}</td></tr>
-                          <tr><td class="pr-4 py-0.5 text-ink-faint">FUTA</td><td class="text-ink-dim">{formatCurrency(taxes().futa)}</td></tr>
-                          <tr><td class="pr-4 py-0.5 text-ink-faint">SUTA</td><td class="text-ink-dim">{formatCurrency(taxes().suta)}</td></tr>
-                          <tr><td class="pr-4 py-0.5 text-ink-faint">Workers' Comp</td><td class="text-ink-dim">{formatCurrency(taxes().workersComp)}</td></tr>
-                          <tr><td class="pr-4 py-0.5 text-ink-faint">Health Insurance</td><td class="text-ink-dim">{formatCurrency(taxes().healthInsurance)}</td></tr>
+                          <tr><td class="pr-6 py-1 text-ink-faint">Social Security</td><td class="text-ink">{formatCurrency(taxes().socialSecurity)}</td></tr>
+                          <tr><td class="pr-6 py-1 text-ink-faint">Medicare</td><td class="text-ink">{formatCurrency(taxes().medicare)}</td></tr>
+                          <tr><td class="pr-6 py-1 text-ink-faint">FUTA</td><td class="text-ink">{formatCurrency(taxes().futa)}</td></tr>
+                          <tr><td class="pr-6 py-1 text-ink-faint">SUTA</td><td class="text-ink">{formatCurrency(taxes().suta)}</td></tr>
+                          <tr><td class="pr-6 py-1 text-ink-faint">Workers' Comp</td><td class="text-ink">{formatCurrency(taxes().workersComp)}</td></tr>
+                          <tr><td class="pr-6 py-1 text-ink-faint">Health Insurance</td><td class="text-ink">{formatCurrency(taxes().healthInsurance)}</td></tr>
                         </tbody>
                       </table>
                     </div>
@@ -133,8 +152,8 @@ export default function TeamDiagram() {
       </div>
 
       {/* Summary bar */}
-      <div class="bg-panel border border-line p-4 mt-0">
-        <div class="flex gap-6 flex-wrap font-mono text-sm items-center">
+      <div class="bg-panel border border-line p-5 mt-0">
+        <div class="flex gap-6 flex-wrap font-mono text-[13px] items-center">
           <span class="text-ink-faint">
             <span class="text-ink font-semibold">{activeHeadcount()}</span> / <span class="text-ink font-semibold">{totalHeadcount()}</span> headcount
           </span>
@@ -152,6 +171,63 @@ export default function TeamDiagram() {
               Reset to defaults
             </button>
           </Show>
+        </div>
+      </div>
+
+      {/* Team Cost Breakdown Table */}
+      <div class="mt-8">
+        <h3 class="font-display font-semibold text-[1.2rem] mb-5">Team Cost Breakdown</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-line">
+                <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-4">Role</th>
+                <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-4">Status</th>
+                <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-4">Base Salary</th>
+                <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-4">Tax Burden</th>
+                <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-4">Monthly (loaded)</th>
+                <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2">Annual (loaded)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <For each={roles}>
+                {(role) => {
+                  const taxes = () => computeEmployerTaxes(role.annualSalary);
+                  return (
+                    <tr
+                      class="border-b border-line"
+                      classList={{ 'opacity-60': role.status === 'future' }}
+                    >
+                      <td class="py-2.5 pr-4 text-[.92rem] text-ink font-semibold">{role.role}</td>
+                      <td class="py-2.5 pr-4">
+                        <span
+                          class="font-mono text-[9px] uppercase tracking-[.08em] px-2 py-0.5 rounded"
+                          classList={{
+                            'bg-up/20 text-up': role.status === 'active',
+                            'bg-public/15 text-public': role.status === 'future',
+                          }}
+                        >
+                          {role.status === 'active' ? 'Active' : `M${role.startMonth}`}
+                        </span>
+                      </td>
+                      <td class="py-2.5 pr-4 font-mono text-[.88rem] text-ink">{formatCurrency(role.annualSalary, true)}</td>
+                      <td class="py-2.5 pr-4 font-mono text-[.88rem] text-ink-dim">{formatCurrency(taxes().total, true)}</td>
+                      <td class="py-2.5 pr-4 font-mono text-[.88rem] text-ink">{formatCurrency(taxes().fullyLoaded / 12, true)}</td>
+                      <td class="py-2.5 font-mono text-[.88rem] text-acid">{formatCurrency(taxes().fullyLoaded, true)}</td>
+                    </tr>
+                  );
+                }}
+              </For>
+              {/* Totals row */}
+              <tr class="font-semibold border-t-2 border-line">
+                <td class="py-3 pr-4 text-[.92rem] text-ink" colSpan={2}>Total</td>
+                <td class="py-3 pr-4 font-mono text-[.88rem] text-ink">{formatCurrency(totalBaseSalary(), true)}</td>
+                <td class="py-3 pr-4 font-mono text-[.88rem] text-ink-dim">{formatCurrency(totalTaxBurden(), true)}</td>
+                <td class="py-3 pr-4 font-mono text-[.88rem] text-ink">{formatCurrency(totalMonthlyLoaded(), true)}</td>
+                <td class="py-3 font-mono text-[.88rem] text-acid">{formatCurrency(totalAnnualLoaded(), true)}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
