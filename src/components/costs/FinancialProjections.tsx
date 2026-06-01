@@ -39,7 +39,7 @@ function makeDefaults(): ProjectionInputs {
     growthRate: 15,
     churnRate: 5,
     grossMargin: 82,
-    cac: 160,
+    cac: 45,
     seedFunding: 500000,
   };
 }
@@ -219,7 +219,7 @@ export default function FinancialProjections() {
                 onChange={(v) => update('startingCustomers', v)}
                 min={0}
                 max={5000}
-                step={50}
+                step={5}
                 format={(v) => formatNumber(v)}
               />
             </div>
