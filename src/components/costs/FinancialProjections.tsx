@@ -1,9 +1,9 @@
-import { For, Show, onMount, createMemo } from 'solid-js';
+import { For, Show, onMount, createMemo, createSignal } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
 import { fixedCosts } from '../../data/costs';
 import { teamCostAtMonth } from '../../data/teamStore';
 import { formatCurrency, formatNumber, formatPercent } from '../../lib/format';
-import EditableValue from './EditableValue';
+import SliderInput from './SliderInput';
 
 const STORAGE_KEY = 'enzo-projection-inputs';
 
@@ -59,6 +59,7 @@ function saveToDisk(inputs: ProjectionInputs) {
 export default function FinancialProjections() {
   const defaults = makeDefaults();
   const [inputs, setInputs] = createStore<ProjectionInputs>(makeDefaults());
+  const [selectedMonth, setSelectedMonth] = createSignal<number | null>(null);
 
   onMount(() => {
     const saved = loadSaved();
@@ -213,12 +214,12 @@ export default function FinancialProjections() {
               Starting Customers (M0)
             </div>
             <div class="font-display font-black text-[1.4rem] leading-none text-ink">
-              <EditableValue
+              <SliderInput
                 value={inputs.startingCustomers}
                 onChange={(v) => update('startingCustomers', v)}
                 min={0}
-                max={1000}
-                step={10}
+                max={5000}
+                step={50}
                 format={(v) => formatNumber(v)}
               />
             </div>
@@ -229,12 +230,12 @@ export default function FinancialProjections() {
               Monthly Price (ARPU)
             </div>
             <div class="font-display font-black text-[1.4rem] leading-none text-ink">
-              <EditableValue
+              <SliderInput
                 value={inputs.arpu}
                 onChange={(v) => update('arpu', v)}
-                min={29}
-                max={299}
-                step={1}
+                min={9}
+                max={499}
+                step={5}
                 format={(v) => `$${v}/mo`}
               />
             </div>
@@ -245,7 +246,7 @@ export default function FinancialProjections() {
               Monthly Growth Rate
             </div>
             <div class="font-display font-black text-[1.4rem] leading-none text-ink">
-              <EditableValue
+              <SliderInput
                 value={inputs.growthRate}
                 onChange={(v) => update('growthRate', v)}
                 min={0}
@@ -261,7 +262,7 @@ export default function FinancialProjections() {
               Monthly Churn Rate
             </div>
             <div class="font-display font-black text-[1.4rem] leading-none text-ink">
-              <EditableValue
+              <SliderInput
                 value={inputs.churnRate}
                 onChange={(v) => update('churnRate', v)}
                 min={0}
@@ -277,7 +278,7 @@ export default function FinancialProjections() {
               Gross Margin
             </div>
             <div class="font-display font-black text-[1.4rem] leading-none text-ink">
-              <EditableValue
+              <SliderInput
                 value={inputs.grossMargin}
                 onChange={(v) => update('grossMargin', v)}
                 min={50}
@@ -293,12 +294,12 @@ export default function FinancialProjections() {
               CAC
             </div>
             <div class="font-display font-black text-[1.4rem] leading-none text-ink">
-              <EditableValue
+              <SliderInput
                 value={inputs.cac}
                 onChange={(v) => update('cac', v)}
-                min={50}
-                max={500}
-                step={10}
+                min={0}
+                max={1000}
+                step={25}
                 format={(v) => `$${v}`}
               />
             </div>
@@ -309,12 +310,12 @@ export default function FinancialProjections() {
               Seed Funding
             </div>
             <div class="font-display font-black text-[1.4rem] leading-none text-ink">
-              <EditableValue
+              <SliderInput
                 value={inputs.seedFunding}
                 onChange={(v) => update('seedFunding', v)}
                 min={0}
-                max={5000000}
-                step={50000}
+                max={10000000}
+                step={100000}
                 format={(v) => formatCurrency(v, true)}
               />
             </div>
@@ -441,14 +442,19 @@ export default function FinancialProjections() {
 
                   return (
                     <tr
-                      class="border-b border-line font-mono text-[.84rem]"
+                      class="border-b border-line font-mono text-[.84rem] cursor-pointer"
                       classList={{
-                        'border-l-2 border-l-wrapper': isHireMonth() && !isBreakEven(),
-                        'border-l-2 border-l-acid': isBreakEven(),
-                        'bg-down/5': isNegativeCash(),
+                        'border-l-2 border-l-wrapper': isHireMonth() && !isBreakEven() && selectedMonth() !== row.month,
+                        'border-l-2 border-l-acid': isBreakEven() && selectedMonth() !== row.month,
+                        'bg-down/5': isNegativeCash() && selectedMonth() !== row.month,
+                        'ring-1 ring-acid bg-acid/5': selectedMonth() === row.month,
                       }}
+                      onClick={() => setSelectedMonth(selectedMonth() === row.month ? null : row.month)}
                     >
-                      <td class="py-2 pr-3 text-ink-dim sticky left-0 bg-bg z-10">
+                      <td
+                        class="py-2 pr-3 text-ink-dim sticky left-0 z-10"
+                        classList={{ 'bg-bg': selectedMonth() !== row.month, 'bg-[#0f1a0a]': selectedMonth() === row.month }}
+                      >
                         M{row.month} <span class="text-ink-faint text-[10px] hidden min-[640px]:inline">{monthLabels[row.month]}</span>
                       </td>
                       <td class="py-2 pr-3 text-ink">
