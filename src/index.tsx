@@ -6,6 +6,7 @@ import './styles/global.css';
 
 const MarketAnalysis = lazy(() => import('./pages/MarketAnalysis'));
 const CostAnalysis = lazy(() => import('./pages/CostAnalysis'));
+const TeamPage = lazy(() => import('./pages/TeamPage'));
 
 function AppShell(props: ParentProps) {
   const location = useLocation();
@@ -32,6 +33,7 @@ render(() => (
   <Router root={AppShell}>
     <Route path="/" component={MarketAnalysis} />
     <Route path="/costs" component={CostAnalysis} />
+    <Route path="/team" component={TeamPage} />
     <Route path="*" component={NotFound} />
   </Router>
 ), document.getElementById('app')!);
