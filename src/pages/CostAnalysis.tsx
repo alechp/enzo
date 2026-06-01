@@ -1,6 +1,5 @@
 import SectionHead from '../components/costs/SectionHead';
 import CompSlider from '../components/costs/CompSlider';
-import EquityBreakdown from '../components/costs/EquityBreakdown';
 import TeamDiagram from '../components/costs/TeamDiagram';
 import UnitEconomics from '../components/costs/UnitEconomics';
 import FinancialProjections from '../components/costs/FinancialProjections';
@@ -42,16 +41,10 @@ export default function CostAnalysis() {
         <CompSlider />
       </section>
 
-      {/* 02: Equity */}
-      <section class="py-[54px] border-b border-line">
-        <SectionHead number="02 /" title="Equity & Acceleration" subtitle="double trigger" />
-        <EquityBreakdown />
-      </section>
-
-      {/* 03: Team */}
+      {/* 02: Team */}
       <section class="py-[54px] border-b border-line">
         <SectionHead
-          number="03 /"
+          number="02 /"
           title="Team Distribution & Fixed Costs"
           subtitle="tax-adjusted staffing"
         />
@@ -59,10 +52,10 @@ export default function CostAnalysis() {
         <CommentThread sectionId="team-distribution" />
       </section>
 
-      {/* 04: Unit Economics */}
+      {/* 03: Unit Economics */}
       <section class="py-[54px] border-b border-line">
         <SectionHead
-          number="04 /"
+          number="03 /"
           title="Unit Economics"
           subtitle="per-video · per-customer"
         />
@@ -70,9 +63,9 @@ export default function CostAnalysis() {
         <CommentThread sectionId="unit-economics" />
       </section>
 
-      {/* 05: Financial Projections */}
+      {/* 04: Financial Projections */}
       <section class="py-[54px]">
-        <SectionHead number="05 /" title="Financial Projections" subtitle="24-month model" />
+        <SectionHead number="04 /" title="Financial Projections" subtitle="24-month model" />
         <FinancialProjections />
         <CommentThread sectionId="financial-projections" />
       </section>
