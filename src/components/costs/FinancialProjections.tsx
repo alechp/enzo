@@ -5,7 +5,7 @@ import { teamCostAtMonth } from '../../data/teamStore';
 import { formatCurrency, formatNumber, formatPercent } from '../../lib/format';
 import SliderInput from './SliderInput';
 
-const STORAGE_KEY = 'enzo-projection-inputs';
+const STORAGE_KEY = 'enzo-projection-inputs-v2';
 
 interface ProjectionInputs {
   startingCustomers: number;

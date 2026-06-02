@@ -1,7 +1,7 @@
 import { createStore, reconcile } from 'solid-js/store';
 import { teamRoles, computeEmployerTaxes, type TeamRole } from './costs';
 
-const STORAGE_KEY = 'enzo-adjusted-team';
+const STORAGE_KEY = 'enzo-adjusted-team-v2';
 
 function loadSaved(): TeamRole[] | null {
   try {

@@ -193,16 +193,16 @@ export default function CTOProfile() {
                   class="bg-panel p-5 hover:bg-panel-2 transition-colors"
                   style={{ 'border-left': `3px solid ${entry.color}` }}
                 >
-                  <div class="flex items-start justify-between gap-3 mb-1 flex-wrap">
+                  <div class="flex items-start justify-between gap-3 mb-1 max-[640px]:flex-col">
                     <div>
                       <div class="font-display font-semibold text-[1.1rem] text-ink">
                         {entry.title}
                       </div>
-                      <div class="font-mono text-[10px] uppercase tracking-[.1em] text-ink-faint">
+                      <div class="font-mono text-[.75rem] uppercase tracking-[.1em] text-ink-faint">
                         {entry.company}
                       </div>
                     </div>
-                    <div class="font-mono text-[10px] text-ink-faint text-right shrink-0">
+                    <div class="font-mono text-[.75rem] text-ink-faint text-right max-[640px]:text-left shrink-0">
                       {entry.period}
                     </div>
                   </div>
@@ -215,7 +215,7 @@ export default function CTOProfile() {
                     <div class="ml-4 mt-3 border-l border-line pl-4 space-y-1">
                       <For each={entry.progression}>
                         {(p) => (
-                          <div class="font-mono text-[11px]">
+                          <div class="font-mono text-[.8rem]">
                             <span class="text-ink-faint">{p.year}:</span>
                             <span class="text-ink-dim ml-2">{p.focus}</span>
                           </div>
@@ -228,7 +228,7 @@ export default function CTOProfile() {
                     <For each={entry.tags}>
                       {(tag) => (
                         <span
-                          class={`font-mono text-[8px] uppercase tracking-[.08em] px-2 py-0.5 rounded border ${tagColors[tag] || 'bg-panel-2 text-ink-faint border-line'}`}
+                          class={`font-mono text-[.65rem] uppercase tracking-[.08em] px-2 py-0.5 rounded border ${tagColors[tag] || 'bg-panel-2 text-ink-faint border-line'}`}
                         >
                           {tag}
                         </span>

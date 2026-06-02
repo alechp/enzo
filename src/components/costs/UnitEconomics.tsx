@@ -5,7 +5,7 @@ import { activeMonthlyBurn } from '../../data/teamStore';
 import { formatCurrency } from '../../lib/format';
 import EditableValue from './EditableValue';
 
-const STORAGE_KEY = 'enzo-adjusted-economics';
+const STORAGE_KEY = 'enzo-adjusted-economics-v2';
 
 interface EconomicsState {
   videoCosts: VideoCost[];

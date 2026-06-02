@@ -19,8 +19,8 @@ export function SavedBanner() {
   const handleClear = () => {
     clearProfile();
     resetTeamDefaults();
-    localStorage.removeItem('enzo-adjusted-economics');
-    localStorage.removeItem('enzo-projection-inputs');
+    localStorage.removeItem('enzo-adjusted-economics-v2');
+    localStorage.removeItem('enzo-projection-inputs-v2');
     window.location.reload();
   };
 

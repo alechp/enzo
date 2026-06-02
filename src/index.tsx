@@ -18,13 +18,14 @@ function AppShell(props: ParentProps) {
 }
 
 function NotFound() {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   return (
     <div class="py-20 text-center">
       <h1 class="font-display font-black text-[3rem] text-ink mb-4">404</h1>
       <p class="text-ink-dim mb-6">Page not found.</p>
-      <A href="/" class="text-acid font-mono text-sm no-underline hover:underline">
+      <a href={`${base}/`} class="text-acid font-mono text-sm no-underline hover:underline">
         ← Market Analysis
-      </A>
+      </a>
     </div>
   );
 }
