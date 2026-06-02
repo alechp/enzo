@@ -343,9 +343,11 @@ export default function FinancialProjections() {
         </div>
       </div>
 
-      {/* Summary KPIs — Row 1: Break-even + M24 metrics */}
+      {/* Summary KPIs */}
       <div>
         <h3 class="font-display font-semibold text-[1.2rem] mb-5">Key Metrics</h3>
+
+        {/* Row 1: Break-even, ARR milestones, customers */}
         <div class="grid grid-cols-4 gap-4 max-[880px]:grid-cols-2 max-[480px]:grid-cols-1 mb-4">
           <div class="bg-panel border border-line p-4">
             <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
@@ -358,13 +360,25 @@ export default function FinancialProjections() {
 
           <div class="bg-panel border border-line p-4">
             <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
-              M24 MRR
+              1Y ARR (M12)
             </div>
             <div class="font-display font-black text-[1.8rem] leading-none text-ink">
-              {formatCurrency(rows()[23]?.mrr ?? 0, true)}
+              {formatCurrency((rows()[11]?.mrr ?? 0) * 12, true)}
             </div>
             <div class="font-mono text-[10px] text-ink-faint mt-1">
-              ARR {formatCurrency((rows()[23]?.mrr ?? 0) * 12, true)}
+              MRR {formatCurrency(rows()[11]?.mrr ?? 0, true)}
+            </div>
+          </div>
+
+          <div class="bg-panel border border-line p-4">
+            <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
+              2Y ARR (M24)
+            </div>
+            <div class="font-display font-black text-[1.8rem] leading-none text-ink">
+              {formatCurrency((rows()[23]?.mrr ?? 0) * 12, true)}
+            </div>
+            <div class="font-mono text-[10px] text-ink-faint mt-1">
+              MRR {formatCurrency(rows()[23]?.mrr ?? 0, true)}
             </div>
           </div>
 
@@ -550,6 +564,7 @@ export default function FinancialProjections() {
                 <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-3">+New</th>
                 <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-3">-Churned</th>
                 <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-3">MRR</th>
+                <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-3">Run Rate</th>
                 <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-3">Gross Profit</th>
                 <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-3">Team Cost</th>
                 <th class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint py-2 pr-3">Fixed Costs</th>
@@ -594,6 +609,9 @@ export default function FinancialProjections() {
                       </td>
                       <td class="py-2 pr-3 text-ink">
                         {formatCurrency(row.mrr, true)}
+                      </td>
+                      <td class="py-2 pr-3 text-ink-dim">
+                        {formatCurrency(row.mrr * 12, true)}
                       </td>
                       <td class="py-2 pr-3 text-ink">
                         {formatCurrency(row.grossProfit, true)}
