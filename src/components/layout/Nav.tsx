@@ -18,7 +18,7 @@ export default function Nav() {
         </A>
         <FontSizeControl />
       </div>
-      <div class="flex gap-5 max-[480px]:gap-3">
+      <div class="flex gap-5 max-[480px]:gap-3 items-center">
         <A
           href="/"
           class="font-mono text-[11px] max-[480px]:text-[9px] uppercase no-underline transition-colors"
@@ -52,6 +52,14 @@ export default function Nav() {
         >
           Team
         </A>
+        <button
+          class="font-mono text-[11px] max-[480px]:text-[9px] uppercase text-ink-faint hover:text-acid transition-colors border border-line px-2 py-1 rounded-sm hover:border-acid no-print"
+          style="letter-spacing: .12em"
+          onClick={() => window.print()}
+          title="Print / Save as PDF"
+        >
+          PDF
+        </button>
       </div>
     </nav>
   );

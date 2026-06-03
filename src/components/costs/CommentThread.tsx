@@ -64,7 +64,7 @@ export default function CommentThread(props: CommentThreadProps) {
   };
 
   return (
-    <div class="mt-6 border border-line bg-panel p-4">
+    <div class="mt-6 border border-line bg-panel p-4 no-print">
       <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-3">
         Comments
       </div>

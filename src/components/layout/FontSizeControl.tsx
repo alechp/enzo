@@ -30,7 +30,7 @@ export default function FontSizeControl() {
   };
 
   return (
-    <div class="flex items-center gap-1.5 font-mono text-[10px] border border-line rounded-sm px-1.5 py-1 bg-panel">
+    <div class="flex items-center gap-1.5 font-mono text-[10px] border border-line rounded-sm px-1.5 py-1 bg-panel no-print">
       <span class="text-[9px] text-ink-faint uppercase tracking-[.08em] mr-0.5">Font</span>
       <button
         class="w-6 h-6 flex items-center justify-center text-ink-dim hover:text-ink hover:bg-panel-2 rounded-sm transition-colors disabled:opacity-30 disabled:pointer-events-none"

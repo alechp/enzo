@@ -71,7 +71,7 @@ export default function SaveScenario() {
   };
 
   return (
-    <div class="mt-10 border border-line bg-panel p-6">
+    <div class="mt-10 border border-line bg-panel p-6 no-print">
       <Show when={prompting()}>
         <div class="mb-4">
           <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-3">
