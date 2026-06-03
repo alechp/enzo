@@ -347,7 +347,39 @@ export default function FinancialProjections() {
       <div>
         <h3 class="font-display font-semibold text-[1.2rem] mb-5">Key Metrics</h3>
 
-        {/* Row 1: Break-even, ARR milestones, customers */}
+        {/* Row 1: ARR Y1–Y4 */}
+        <div class="grid grid-cols-4 gap-4 max-[880px]:grid-cols-2 max-[480px]:grid-cols-1 mb-4">
+          {(() => {
+            const m24Mrr = rows()[23]?.mrr ?? 0;
+            const gr = inputs.growthRate / 100;
+            const cr = inputs.churnRate / 100;
+            const netGrowth = 1 + gr - cr;
+            const m12Mrr = rows()[11]?.mrr ?? 0;
+            const m36Mrr = m24Mrr * Math.pow(netGrowth, 12);
+            const m48Mrr = m24Mrr * Math.pow(netGrowth, 24);
+
+            return [
+              { label: 'Y1 ARR', mrr: m12Mrr, month: 'M12' },
+              { label: 'Y2 ARR', mrr: m24Mrr, month: 'M24' },
+              { label: 'Y3 ARR', mrr: m36Mrr, month: 'M36 est.' },
+              { label: 'Y4 ARR', mrr: m48Mrr, month: 'M48 est.' },
+            ].map((item) => (
+              <div class="bg-panel border border-line p-4">
+                <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
+                  {item.label}
+                </div>
+                <div class="font-display font-black text-[1.8rem] leading-none text-ink">
+                  {formatCurrency(item.mrr * 12, true)}
+                </div>
+                <div class="font-mono text-[10px] text-ink-faint mt-1">
+                  MRR {formatCurrency(item.mrr, true)} · {item.month}
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
+
+        {/* Row 2: Break-even, Customers, Net Income */}
         <div class="grid grid-cols-4 gap-4 max-[880px]:grid-cols-2 max-[480px]:grid-cols-1 mb-4">
           <div class="bg-panel border border-line p-4">
             <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
@@ -355,30 +387,6 @@ export default function FinancialProjections() {
             </div>
             <div class="font-display font-black text-[1.8rem] leading-none text-acid">
               {breakEvenMonth() >= 0 ? `M${breakEvenMonth()}` : 'N/A'}
-            </div>
-          </div>
-
-          <div class="bg-panel border border-line p-4">
-            <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
-              1Y ARR (M12)
-            </div>
-            <div class="font-display font-black text-[1.8rem] leading-none text-ink">
-              {formatCurrency((rows()[11]?.mrr ?? 0) * 12, true)}
-            </div>
-            <div class="font-mono text-[10px] text-ink-faint mt-1">
-              MRR {formatCurrency(rows()[11]?.mrr ?? 0, true)}
-            </div>
-          </div>
-
-          <div class="bg-panel border border-line p-4">
-            <div class="font-mono text-[10px] uppercase tracking-[.14em] text-ink-faint mb-2">
-              2Y ARR (M24)
-            </div>
-            <div class="font-display font-black text-[1.8rem] leading-none text-ink">
-              {formatCurrency((rows()[23]?.mrr ?? 0) * 12, true)}
-            </div>
-            <div class="font-mono text-[10px] text-ink-faint mt-1">
-              MRR {formatCurrency(rows()[23]?.mrr ?? 0, true)}
             </div>
           </div>
 
